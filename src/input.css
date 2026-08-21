@@ -39,6 +39,14 @@
   .nav-link {
     @apply relative text-sm font-semibold text-slate-700 transition-colors hover:text-brand-600;
   }
+  /* text-base (16px), not text-sm: anything smaller makes iOS Safari
+     zoom the page in when the field is focused. */
+  .form-input {
+    @apply w-full rounded-lg border border-slate-200 px-4 py-3 text-base focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100;
+  }
+  .form-label {
+    @apply text-sm font-semibold text-slate-700;
+  }
 
   /* --- Admin CMS components --- */
   .admin-card {
@@ -57,16 +65,19 @@
     @apply admin-btn border border-red-200 text-red-600 hover:bg-red-50;
   }
   .admin-input {
-    @apply w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100;
+    @apply w-full rounded-lg border border-slate-200 px-3.5 py-2.5 text-base focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100;
   }
   .admin-label {
     @apply mb-1.5 block text-sm font-semibold text-slate-700;
   }
+  /* min-width forces the .overflow-x-auto wrapper each table list page
+     uses to actually scroll horizontally on small screens, instead of
+     every column silently compressing/wrapping into an unreadable mess. */
   .admin-table {
-    @apply w-full text-left text-sm;
+    @apply w-full min-w-[720px] text-left text-sm;
   }
   .admin-table th {
-    @apply border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-500;
+    @apply whitespace-nowrap border-b border-slate-200 bg-slate-50 px-4 py-3 text-xs font-bold uppercase tracking-wide text-slate-500;
   }
   .admin-table td {
     @apply border-b border-slate-100 px-4 py-3.5 align-middle;

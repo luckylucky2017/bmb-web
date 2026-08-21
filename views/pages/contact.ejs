@@ -53,21 +53,21 @@
       <form action="/lien-he" method="POST" class="mt-6 space-y-5">
         <div class="grid gap-5 sm:grid-cols-2">
           <div>
-            <label class="text-sm font-semibold text-slate-700">Họ và tên</label>
-            <input type="text" name="name" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            <label class="form-label">Họ và tên</label>
+            <input type="text" name="name" required class="form-input mt-2" />
           </div>
           <div>
-            <label class="text-sm font-semibold text-slate-700">Số điện thoại</label>
-            <input type="tel" name="phone" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            <label class="form-label">Số điện thoại</label>
+            <input type="tel" name="phone" required class="form-input mt-2" />
           </div>
         </div>
         <div>
-          <label class="text-sm font-semibold text-slate-700">Email</label>
-          <input type="email" name="email" class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-input mt-2" />
         </div>
         <div>
-          <label class="text-sm font-semibold text-slate-700">Nội dung</label>
-          <textarea name="message" rows="4" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"></textarea>
+          <label class="form-label">Nội dung</label>
+          <textarea name="message" rows="4" required class="form-input mt-2"></textarea>
         </div>
         <button type="submit" class="btn-primary w-full">Gửi yêu cầu</button>
       </form>
