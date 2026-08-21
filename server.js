@@ -46,7 +46,12 @@ app.use(
         connectSrc: ["'self'"],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
-        frameAncestors: ["'self'"]
+        frameAncestors: ["'self'"],
+        // Disabled: the reverse-proxy chain in front of this app terminates
+        // TLS externally (Cloudflare) and talks plain HTTP to this origin,
+        // so forcing HTTPS upgrades on same-origin asset requests here
+        // would break every page load.
+        upgradeInsecureRequests: null
       }
     },
     crossOriginEmbedderPolicy: false
