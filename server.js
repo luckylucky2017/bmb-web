@@ -2,6 +2,8 @@ const express = require("express");
 const path = require("path");
 const compression = require("compression");
 const morgan = require("morgan");
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
 const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -9,6 +11,7 @@ const methodOverride = require("method-override");
 
 const db = require("./db/database");
 const asyncHandler = require("./middleware/asyncHandler");
+const { validateContact, validateOrder } = require("./middleware/validate");
 
 const Product = require("./models/Product");
 const Post = require("./models/Post");
@@ -20,25 +23,55 @@ const Setting = require("./models/Setting");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const isProd = process.env.NODE_ENV === "production";
+
+// Trust exactly one reverse-proxy hop (nginx origin) so req.ip / req.protocol
+// and rate-limit keys reflect the real client instead of the proxy.
+app.set("trust proxy", 1);
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(expressLayouts);
 app.set("layout", "layout");
 
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:"],
+        connectSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        baseUri: ["'self'"],
+        frameAncestors: ["'self'"]
+      }
+    },
+    crossOriginEmbedderPolicy: false
+  })
+);
+
 app.use(compression());
 app.use(morgan("dev"));
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.urlencoded({ extended: true, limit: "200kb" }));
+app.use(express.json({ limit: "200kb" }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(
   session({
+    name: "bmb.sid",
     secret: process.env.SESSION_SECRET || "bmb-vietnam-cms-dev-secret",
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 8 }
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 8,
+      httpOnly: true,
+      sameSite: "lax",
+      secure: isProd
+    }
   })
 );
 app.use(flash());
@@ -50,6 +83,36 @@ app.use((req, res, next) => {
   res.locals.formatVND = (n) => `${Number(n || 0).toLocaleString("vi-VN")}₫`;
   res.locals.formatDate = (d) => (d ? new Date(d).toLocaleDateString("vi-VN") : "");
   next();
+});
+
+// Lightweight CSRF defense-in-depth: SameSite=Lax cookies already stop
+// cross-site POSTs from sending our session cookie; this rejects any
+// state-changing admin request whose Origin/Referer doesn't match our host.
+app.use("/admin", (req, res, next) => {
+  if (["POST", "PUT", "PATCH", "DELETE"].includes(req.method) && !req.path.startsWith("/login")) {
+    const origin = req.get("origin") || req.get("referer");
+    if (origin) {
+      const originHost = (() => {
+        try {
+          return new URL(origin).host;
+        } catch {
+          return null;
+        }
+      })();
+      if (originHost && originHost !== req.get("host")) {
+        return res.status(403).send("Yêu cầu bị từ chối (kiểm tra nguồn gốc thất bại).");
+      }
+    }
+  }
+  next();
+});
+
+const publicFormLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Bạn gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút."
 });
 
 // ---- Admin CMS ----
@@ -122,6 +185,8 @@ app.get(
 
 app.post(
   "/san-pham/:slug/dat-hang",
+  publicFormLimiter,
+  validateOrder,
   asyncHandler(async (req, res) => {
     const product = await Product.findBySlug(req.params.slug);
     if (!product) return res.status(404).send("Không tìm thấy sản phẩm");
@@ -207,6 +272,8 @@ app.get("/lien-he", (req, res) => {
 
 app.post(
   "/lien-he",
+  publicFormLimiter,
+  validateContact,
   asyncHandler(async (req, res) => {
     await ContactMessage.create(req.body);
     res.render("pages/contact", {

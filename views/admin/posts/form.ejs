@@ -8,7 +8,7 @@
   <span class="text-slate-700"><%= isEdit ? 'Sửa bài viết' : 'Viết bài mới' %></span>
 </div>
 
-<form action="<%= action %>" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+<form id="post-form" action="<%= action %>" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 lg:grid-cols-3">
   <div class="admin-card space-y-5 p-6 lg:col-span-2">
     <div>
       <label class="admin-label">Tiêu đề</label>
@@ -79,20 +79,4 @@
 
 <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
-<script>
-  const quill = new Quill('#editor', {
-    theme: 'snow',
-    modules: { toolbar: '#editor-toolbar' },
-    placeholder: 'Nội dung bài viết...'
-  });
-  const contentInput = document.getElementById('content-input');
-  if (contentInput.value) {
-    quill.root.innerHTML = contentInput.value;
-  }
-  quill.on('text-change', () => {
-    contentInput.value = quill.root.innerHTML;
-  });
-  document.querySelector('form').addEventListener('submit', () => {
-    contentInput.value = quill.root.innerHTML;
-  });
-</script>
+<script src="/js/post-editor.js"></script>
