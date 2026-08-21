@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const expressLayouts = require("express-ejs-layouts");
 const session = require("express-session");
+const MySQLStore = require("express-mysql-session")(session);
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 
@@ -65,10 +66,26 @@ app.use(express.json({ limit: "200kb" }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+// Own dedicated pool for the session store (express-mysql-session uses a
+// callback-style pool internally, separate from the app's mysql2/promise
+// pool). Persists sessions in MySQL instead of process memory, so they
+// survive restarts/deploys and work correctly if this ever scales past
+// a single Node process.
+const sessionStore = new MySQLStore({
+  ...db.dbConfig,
+  createDatabaseTable: true,
+  schema: {
+    tableName: "sessions",
+    columnNames: { session_id: "session_id", expires: "expires", data: "data" }
+  }
+});
+sessionStore.onReady().catch((err) => console.error("Session store lỗi:", err));
+
 app.use(
   session({
     name: "bmb.sid",
     secret: process.env.SESSION_SECRET || "bmb-vietnam-cms-dev-secret",
+    store: sessionStore,
     resave: false,
     saveUninitialized: false,
     cookie: {
