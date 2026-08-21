@@ -1,0 +1,48 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Khu vực giao hàng</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= distributors.length %> quận huyện đang phục vụ tại Hà Nội.</p>
+  </div>
+  <a href="/admin/dai-ly/moi" class="admin-btn-primary">+ Thêm khu vực</a>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Quận / Huyện</th>
+        <th>Nhóm khu vực</th>
+        <th>Thời gian giao hàng</th>
+        <th>Ghi chú</th>
+        <th>Trạng thái</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!distributors.length) { %>
+        <tr><td colspan="6" class="py-10 text-center text-slate-400">Chưa có khu vực nào.</td></tr>
+      <% } %>
+      <% distributors.forEach(function(d) { %>
+        <tr>
+          <td class="font-semibold text-slate-900"><%= d.name %></td>
+          <td class="text-slate-500"><%= d.region %></td>
+          <td class="text-slate-500"><%= d.city %></td>
+          <td class="max-w-xs text-slate-500"><%= d.address %></td>
+          <td>
+            <span class="badge <%= d.status === 'active' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
+              <%= d.status === 'active' ? 'Đang phục vụ' : 'Tạm ẩn' %>
+            </span>
+          </td>
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+              <a href="/admin/dai-ly/<%= d.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+              <form action="/admin/dai-ly/<%= d.id %>/xoa" method="POST" data-confirm="Xoá khu vực này?">
+                <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

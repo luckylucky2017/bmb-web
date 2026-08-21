@@ -1,0 +1,48 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Tuyển dụng</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= jobs.length %> vị trí.</p>
+  </div>
+  <a href="/admin/tuyen-dung/moi" class="admin-btn-primary">+ Thêm vị trí</a>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Vị trí</th>
+        <th>Phòng ban</th>
+        <th>Địa điểm</th>
+        <th>Loại hình</th>
+        <th>Trạng thái</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!jobs.length) { %>
+        <tr><td colspan="6" class="py-10 text-center text-slate-400">Chưa có vị trí tuyển dụng nào.</td></tr>
+      <% } %>
+      <% jobs.forEach(function(j) { %>
+        <tr>
+          <td class="font-semibold text-slate-900"><%= j.title %></td>
+          <td class="text-slate-500"><%= j.department %></td>
+          <td class="text-slate-500"><%= j.location %></td>
+          <td class="text-slate-500"><%= j.type %></td>
+          <td>
+            <span class="badge <%= j.status === 'open' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
+              <%= j.status === 'open' ? 'Đang tuyển' : 'Đã đóng' %>
+            </span>
+          </td>
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+              <a href="/admin/tuyen-dung/<%= j.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+              <form action="/admin/tuyen-dung/<%= j.id %>/xoa" method="POST" data-confirm="Xoá vị trí này?">
+                <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

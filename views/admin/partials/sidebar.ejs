@@ -1,0 +1,55 @@
+<%
+  const navGroups = [
+    {
+      label: "Tổng quan",
+      items: [{ key: "", href: "/admin", label: "Bảng điều khiển", icon: "📊" }]
+    },
+    {
+      label: "Nội dung",
+      items: [
+        { key: "san-pham", href: "/admin/san-pham", label: "Sản phẩm", icon: "🧴" },
+        { key: "tin-tuc", href: "/admin/tin-tuc", label: "Tin tức", icon: "📰" },
+        { key: "dai-ly", href: "/admin/dai-ly", label: "Khu vực giao hàng", icon: "🏬" },
+        { key: "tuyen-dung", href: "/admin/tuyen-dung", label: "Tuyển dụng", icon: "💼" }
+      ]
+    },
+    {
+      label: "Kinh doanh",
+      items: [
+        { key: "don-hang", href: "/admin/don-hang", label: "Đơn hàng", icon: "🧾" },
+        { key: "lien-he", href: "/admin/lien-he", label: "Liên hệ", icon: "✉️" }
+      ]
+    },
+    {
+      label: "Hệ thống",
+      items: [
+        { key: "cai-dat", href: "/admin/cai-dat", label: "Cài đặt website", icon: "⚙️" },
+        { key: "nguoi-dung", href: "/admin/nguoi-dung", label: "Người dùng", icon: "👤", role: "superadmin" }
+      ]
+    }
+  ];
+%>
+<div id="sidebar-backdrop" class="fixed inset-0 z-30 hidden bg-slate-900/50 lg:hidden"></div>
+
+<aside id="admin-sidebar" class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full transform border-r border-slate-200 bg-brand-950 text-white transition-transform duration-200 lg:translate-x-0">
+  <div class="flex h-20 items-center gap-3 border-b border-white/10 px-6">
+    <img src="/images/logo-white.svg" alt="BMB Việt Nam" class="h-9 w-auto" />
+  </div>
+
+  <nav class="scroll-py-4 h-[calc(100vh-5rem)] overflow-y-auto px-4 py-6">
+    <% navGroups.forEach(function(group) { %>
+      <p class="mb-2 mt-6 px-2 text-[10px] font-bold uppercase tracking-widest text-brand-300 first:mt-0"><%= group.label %></p>
+      <ul class="space-y-1">
+        <% group.items.forEach(function(item) { %>
+          <% if (item.role && (!currentUser || currentUser.role !== item.role)) return; %>
+          <li>
+            <a href="<%= item.href %>" class="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold transition <%= activeNav === item.key ? 'bg-brand-600 text-white' : 'text-brand-100 hover:bg-white/10' %>">
+              <span class="text-base"><%= item.icon %></span>
+              <span><%= item.label %></span>
+            </a>
+          </li>
+        <% }); %>
+      </ul>
+    <% }); %>
+  </nav>
+</aside>

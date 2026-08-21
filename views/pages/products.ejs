@@ -1,0 +1,26 @@
+<%- include('../partials/page-header', { pageTitle: 'Sản phẩm La Vie', pageSubtitle: 'Đa dạng dòng sản phẩm nước khoáng và nước tinh khiết La Vie, được BMB Việt Nam phân phối chính hãng tại Hà Nội.', eyebrow: 'Sản phẩm' }) %>
+
+<section class="py-20">
+  <div class="container-page">
+    <div class="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
+      <% products.forEach(function(p) { %>
+        <a href="/san-pham/<%= p.slug %>" class="group flex flex-col overflow-hidden rounded-lg border border-slate-100 p-5 text-center transition hover:border-brand-200 hover:shadow-card">
+          <div class="flex aspect-square items-center justify-center">
+            <img src="<%= p.image %>" alt="<%= p.name %>" class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105" />
+          </div>
+          <span class="mt-3 text-[11px] font-semibold uppercase tracking-wide text-slate-400"><%= p.category %> &middot; <%= p.volume %></span>
+          <h3 class="mt-1 font-display text-sm font-extrabold uppercase leading-snug text-brand-700 group-hover:text-brand-600"><%= p.name %></h3>
+          <p class="mt-2 text-lg font-extrabold text-red-600"><%= formatVND(p.price) %></p>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+
+<section class="bg-brand-950 py-16 text-white">
+  <div class="container-page flex flex-col items-center gap-6 text-center">
+    <h2 class="font-display text-2xl font-extrabold sm:text-3xl">Cần tư vấn sản phẩm phù hợp?</h2>
+    <p class="max-w-xl text-brand-100">Đội ngũ BMB Việt Nam sẵn sàng hỗ trợ bạn lựa chọn sản phẩm và số lượng đặt hàng phù hợp.</p>
+    <a href="/lien-he" class="btn-primary">Liên hệ ngay</a>
+  </div>
+</section>

@@ -1,0 +1,48 @@
+<%
+  const isEdit = !!distributor;
+  const action = isEdit ? `/admin/dai-ly/${distributor.id}/sua` : '/admin/dai-ly/moi';
+%>
+<div class="mb-6 flex items-center gap-3 text-sm text-slate-500">
+  <a href="/admin/dai-ly" class="hover:text-brand-600">Khu vực giao hàng</a>
+  <span>/</span>
+  <span class="text-slate-700"><%= isEdit ? 'Sửa khu vực' : 'Thêm khu vực' %></span>
+</div>
+
+<form action="<%= action %>" method="POST" class="admin-card mx-auto max-w-2xl space-y-5 p-6">
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Nhóm khu vực</label>
+      <input type="text" name="region" required list="regions" value="<%= distributor ? distributor.region : '' %>" class="admin-input" placeholder="Nội thành Hà Nội" />
+      <datalist id="regions">
+        <option value="Nội thành Hà Nội"></option>
+        <option value="Ngoại thành Hà Nội"></option>
+      </datalist>
+    </div>
+    <div>
+      <label class="admin-label">Thời gian giao hàng dự kiến</label>
+      <input type="text" name="city" value="<%= distributor ? distributor.city : '' %>" class="admin-input" placeholder="Giao trong ngày (2-4 giờ)" />
+    </div>
+  </div>
+  <div>
+    <label class="admin-label">Tên quận / huyện</label>
+    <input type="text" name="name" required value="<%= distributor ? distributor.name : '' %>" class="admin-input" placeholder="Quận Cầu Giấy" />
+  </div>
+  <div>
+    <label class="admin-label">Ghi chú</label>
+    <input type="text" name="address" value="<%= distributor ? distributor.address : '' %>" class="admin-input" placeholder="Lịch giao, lưu ý phục vụ..." />
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Hotline khu vực</label>
+      <input type="text" name="phone" value="<%= distributor ? distributor.phone : '' %>" class="admin-input" />
+    </div>
+    <div>
+      <label class="admin-label">Trạng thái</label>
+      <select name="status" class="admin-input">
+        <option value="active" <%= distributor && distributor.status === 'active' ? 'selected' : '' %>>Đang phục vụ</option>
+        <option value="inactive" <%= distributor && distributor.status === 'inactive' ? 'selected' : '' %>>Tạm ẩn</option>
+      </select>
+    </div>
+  </div>
+  <button type="submit" class="admin-btn-primary w-full">💾 <%= isEdit ? 'Lưu thay đổi' : 'Thêm khu vực' %></button>
+</form>

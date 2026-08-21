@@ -1,0 +1,98 @@
+<%
+  const isEdit = !!post;
+  const action = isEdit ? `/admin/tin-tuc/${post.id}/sua` : '/admin/tin-tuc/moi';
+%>
+<div class="mb-6 flex items-center gap-3 text-sm text-slate-500">
+  <a href="/admin/tin-tuc" class="hover:text-brand-600">Tin tức</a>
+  <span>/</span>
+  <span class="text-slate-700"><%= isEdit ? 'Sửa bài viết' : 'Viết bài mới' %></span>
+</div>
+
+<form action="<%= action %>" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+  <div class="admin-card space-y-5 p-6 lg:col-span-2">
+    <div>
+      <label class="admin-label">Tiêu đề</label>
+      <input type="text" name="title" required value="<%= post ? post.title : '' %>" class="admin-input" />
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="admin-label">Chuyên mục</label>
+        <input type="text" name="category" value="<%= post ? post.category : '' %>" class="admin-input" placeholder="Doanh nghiệp / Cộng đồng / Sản phẩm" />
+      </div>
+      <div>
+        <label class="admin-label">Đường dẫn (slug)</label>
+        <input type="text" name="slug" value="<%= post ? post.slug : '' %>" class="admin-input" placeholder="Để trống sẽ tự sinh từ tiêu đề" />
+      </div>
+    </div>
+    <div>
+      <label class="admin-label">Tóm tắt</label>
+      <textarea name="excerpt" rows="2" class="admin-input"><%= post ? post.excerpt : '' %></textarea>
+    </div>
+    <div>
+      <label class="admin-label">Nội dung bài viết</label>
+      <input type="hidden" name="content" id="content-input" value="<%= post ? post.content : '' %>" />
+      <div id="editor-toolbar" class="rounded-t-lg border border-b-0 border-slate-200 bg-slate-50 px-2 py-1.5">
+        <select class="ql-header">
+          <option value="2"></option>
+          <option value="3"></option>
+          <option selected></option>
+        </select>
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+        <button class="ql-link"></button>
+        <button class="ql-list" value="ordered"></button>
+        <button class="ql-list" value="bullet"></button>
+        <button class="ql-clean"></button>
+      </div>
+      <div id="editor" class="min-h-[280px] rounded-b-lg border border-slate-200 bg-white"></div>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <div class="admin-card p-6">
+      <label class="admin-label">Trạng thái</label>
+      <select name="status" class="admin-input">
+        <option value="published" <%= post && post.status === 'published' ? 'selected' : '' %>>Đã đăng</option>
+        <option value="draft" <%= post && post.status === 'draft' ? 'selected' : '' %>>Nháp</option>
+      </select>
+      <label class="admin-label mt-4">Ngày đăng</label>
+      <input type="date" name="published_at" value="<%= post ? post.published_at : new Date().toISOString().slice(0,10) %>" class="admin-input" />
+      <div class="mt-4 flex gap-3">
+        <button type="submit" class="admin-btn-primary w-full">💾 <%= isEdit ? 'Lưu thay đổi' : 'Đăng bài' %></button>
+      </div>
+    </div>
+
+    <div class="admin-card p-6">
+      <label class="admin-label">Ảnh đại diện</label>
+      <% if (post && post.image) { %>
+        <div class="mb-3 aspect-[16/10] overflow-hidden rounded-lg bg-slate-50">
+          <img src="<%= post.image %>" alt="" class="h-full w-full object-cover" />
+        </div>
+      <% } %>
+      <input type="file" name="image_file" accept="image/*" class="admin-input" />
+      <p class="mt-2 text-xs text-slate-400">Hoặc dán đường dẫn ảnh có sẵn:</p>
+      <input type="text" name="image" value="<%= post ? post.image : '' %>" class="admin-input mt-1" placeholder="/images/news/..." />
+    </div>
+  </div>
+</form>
+
+<link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script>
+  const quill = new Quill('#editor', {
+    theme: 'snow',
+    modules: { toolbar: '#editor-toolbar' },
+    placeholder: 'Nội dung bài viết...'
+  });
+  const contentInput = document.getElementById('content-input');
+  if (contentInput.value) {
+    quill.root.innerHTML = contentInput.value;
+  }
+  quill.on('text-change', () => {
+    contentInput.value = quill.root.innerHTML;
+  });
+  document.querySelector('form').addEventListener('submit', () => {
+    contentInput.value = quill.root.innerHTML;
+  });
+</script>

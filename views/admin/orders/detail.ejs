@@ -1,0 +1,92 @@
+<div class="mb-6 flex flex-wrap items-center justify-between gap-4">
+  <div class="flex items-center gap-3 text-sm text-slate-500">
+    <a href="/admin/don-hang" class="hover:text-brand-600">Đơn hàng</a>
+    <span>/</span>
+    <span class="text-slate-700"><%= order.code %></span>
+  </div>
+  <form action="/admin/don-hang/<%= order.id %>/xoa" method="POST" data-confirm="Xoá đơn hàng này? Hành động không thể hoàn tác.">
+    <button type="submit" class="admin-btn-danger">🗑 Xoá đơn hàng</button>
+  </form>
+</div>
+
+<div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+  <div class="lg:col-span-2 space-y-6">
+    <div class="admin-card p-6">
+      <div class="flex items-center justify-between">
+        <h2 class="font-display text-lg font-bold text-slate-900">Đơn hàng <%= order.code %></h2>
+        <span class="text-xs text-slate-400">Đặt lúc <%= formatDate(order.created_at) %></span>
+      </div>
+      <table class="admin-table mt-4">
+        <thead>
+          <tr>
+            <th>Sản phẩm</th>
+            <th>Đơn giá</th>
+            <th>SL</th>
+            <th class="text-right">Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% order.items.forEach(function(item) { %>
+            <tr>
+              <td class="font-semibold text-slate-900"><%= item.product_name %></td>
+              <td class="text-slate-500"><%= formatVND(item.price) %></td>
+              <td class="text-slate-500"><%= item.quantity %></td>
+              <td class="text-right font-semibold text-slate-900"><%= formatVND(item.price * item.quantity) %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="3" class="text-right font-bold text-slate-700">Tổng cộng</td>
+            <td class="text-right font-display text-lg font-extrabold text-red-600"><%= formatVND(order.total_amount) %></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <% if (order.note) { %>
+      <div class="admin-card p-6">
+        <h3 class="font-display text-sm font-bold text-slate-900">Ghi chú của khách hàng</h3>
+        <p class="mt-2 text-sm text-slate-600"><%= order.note %></p>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="space-y-6">
+    <div class="admin-card p-6">
+      <h3 class="font-display text-sm font-bold text-slate-900">Cập nhật trạng thái</h3>
+      <form action="/admin/don-hang/<%= order.id %>/trang-thai" method="POST" class="mt-4 space-y-3">
+        <select name="status" class="admin-input">
+          <% Object.entries(statusLabels).forEach(function([key, label]) { %>
+            <option value="<%= key %>" <%= order.status === key ? 'selected' : '' %>><%= label %></option>
+          <% }); %>
+        </select>
+        <button type="submit" class="admin-btn-primary w-full">Cập nhật</button>
+      </form>
+    </div>
+
+    <div class="admin-card p-6">
+      <h3 class="font-display text-sm font-bold text-slate-900">Thông tin khách hàng</h3>
+      <dl class="mt-4 space-y-3 text-sm">
+        <div>
+          <dt class="text-xs font-semibold uppercase text-slate-400">Họ tên</dt>
+          <dd class="mt-0.5 font-semibold text-slate-800"><%= order.customer_name %></dd>
+        </div>
+        <div>
+          <dt class="text-xs font-semibold uppercase text-slate-400">Điện thoại</dt>
+          <dd class="mt-0.5 font-semibold text-slate-800"><a href="tel:<%= order.phone %>" class="hover:text-brand-600"><%= order.phone %></a></dd>
+        </div>
+        <% if (order.email) { %>
+        <div>
+          <dt class="text-xs font-semibold uppercase text-slate-400">Email</dt>
+          <dd class="mt-0.5 text-slate-800"><%= order.email %></dd>
+        </div>
+        <% } %>
+        <div>
+          <dt class="text-xs font-semibold uppercase text-slate-400">Địa chỉ giao hàng</dt>
+          <dd class="mt-0.5 text-slate-800"><%= order.address %></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</div>

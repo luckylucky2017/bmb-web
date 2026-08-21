@@ -1,0 +1,31 @@
+<%- include('../partials/page-header', { pageTitle: 'Khu vực giao hàng', pageSubtitle: 'BMB Việt Nam phục vụ giao nước La Vie tận nơi tại các quận huyện nội và ngoại thành Hà Nội.', eyebrow: 'Khu vực phục vụ' }) %>
+
+<section class="py-20">
+  <div class="container-page space-y-16">
+    <% distributors.forEach(function(group) { %>
+      <div>
+        <h2 class="font-display text-2xl font-extrabold text-slate-900"><%= group.region %></h2>
+        <div class="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <% group.items.forEach(function(d) { %>
+            <div class="card p-6">
+              <h3 class="font-display text-base font-bold text-slate-900"><%= d.name %></h3>
+              <p class="mt-1 text-xs font-semibold uppercase tracking-wide text-brand-500">⏱ <%= d.city %></p>
+              <p class="mt-3 text-sm text-slate-500"><%= d.address %></p>
+              <p class="mt-2 flex items-center gap-2 text-sm font-semibold text-slate-700">
+                <span>📞</span> <%= d.phone %>
+              </p>
+            </div>
+          <% }); %>
+        </div>
+      </div>
+    <% }); %>
+  </div>
+</section>
+
+<section class="bg-brand-950 py-16 text-white">
+  <div class="container-page flex flex-col items-center gap-6 text-center">
+    <h2 class="font-display text-2xl font-extrabold sm:text-3xl">Khu vực bạn ở chưa có trong danh sách?</h2>
+    <p class="max-w-xl text-brand-100">Liên hệ với chúng tôi để được hỗ trợ kiểm tra khả năng giao hàng đến địa chỉ của bạn.</p>
+    <a href="/lien-he" class="btn-primary">Liên hệ hỗ trợ</a>
+  </div>
+</section>

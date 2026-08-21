@@ -1,0 +1,11 @@
+<section class="relative overflow-hidden bg-gradient-to-br from-brand-950 via-brand-800 to-aqua-600 py-20 text-white">
+  <div class="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-white/10"></div>
+  <div class="pointer-events-none absolute -bottom-32 -left-16 h-72 w-72 rounded-full bg-white/5"></div>
+  <div class="container-page relative">
+    <p class="text-xs font-semibold uppercase tracking-[0.3em] text-brand-200"><%= locals.eyebrow || 'BMB Việt Nam' %></p>
+    <h1 class="mt-3 max-w-2xl font-display text-4xl font-extrabold leading-tight sm:text-5xl"><%= pageTitle %></h1>
+    <% if (locals.pageSubtitle) { %>
+      <p class="mt-4 max-w-xl text-brand-100"><%= pageSubtitle %></p>
+    <% } %>
+  </div>
+</section>

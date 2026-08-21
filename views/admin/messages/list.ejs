@@ -1,0 +1,41 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Liên hệ</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= messages.length %> tin nhắn từ khách hàng.</p>
+  </div>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Người gửi</th>
+        <th>Nội dung</th>
+        <th>Ngày gửi</th>
+        <th>Trạng thái</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!messages.length) { %>
+        <tr><td colspan="5" class="py-10 text-center text-slate-400">Chưa có liên hệ nào.</td></tr>
+      <% } %>
+      <%
+        const STATUS_LABELS = { new: "Mới", read: "Đã đọc", replied: "Đã phản hồi" };
+        const STATUS_CLS = { new: "bg-red-100 text-red-700", read: "bg-slate-100 text-slate-600", replied: "bg-leaf-500/15 text-leaf-700" };
+      %>
+      <% messages.forEach(function(m) { %>
+        <tr class="<%= m.status === 'new' ? 'bg-brand-50/30' : '' %>">
+          <td>
+            <p class="font-semibold text-slate-900"><%= m.name %></p>
+            <p class="text-xs text-slate-400"><%= m.phone %> <%= m.email ? '· ' + m.email : '' %></p>
+          </td>
+          <td class="max-w-sm"><p class="line-clamp-1 text-slate-500"><%= m.message %></p></td>
+          <td class="text-slate-500"><%= formatDate(m.created_at) %></td>
+          <td><span class="badge <%= STATUS_CLS[m.status] %>"><%= STATUS_LABELS[m.status] %></span></td>
+          <td class="text-right"><a href="/admin/lien-he/<%= m.id %>" class="admin-btn-outline !px-3 !py-1.5">Xem</a></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

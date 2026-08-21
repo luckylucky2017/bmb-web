@@ -1,0 +1,32 @@
+{
+  "name": "bmb-vietnam",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website Cong ty TNHH BMB Viet Nam",
+  "main": "server.js",
+  "scripts": {
+    "dev:css": "tailwindcss -i ./src/input.css -o ./public/css/style.css --watch",
+    "build:css": "tailwindcss -i ./src/input.css -o ./public/css/style.css --minify",
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "compression": "^1.7.4",
+    "connect-flash": "^0.1.1",
+    "dayjs": "^1.11.23",
+    "dotenv": "^17.4.2",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-session": "^1.19.0",
+    "method-override": "^3.0.0",
+    "morgan": "^1.10.0",
+    "multer": "^2.2.0",
+    "mysql2": "^3.23.4"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "tailwindcss": "^3.4.13"
+  }
+}

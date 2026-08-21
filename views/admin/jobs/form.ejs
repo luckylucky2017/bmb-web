@@ -1,0 +1,48 @@
+<%
+  const isEdit = !!job;
+  const action = isEdit ? `/admin/tuyen-dung/${job.id}/sua` : '/admin/tuyen-dung/moi';
+%>
+<div class="mb-6 flex items-center gap-3 text-sm text-slate-500">
+  <a href="/admin/tuyen-dung" class="hover:text-brand-600">Tuyển dụng</a>
+  <span>/</span>
+  <span class="text-slate-700"><%= isEdit ? 'Sửa vị trí' : 'Thêm vị trí' %></span>
+</div>
+
+<form action="<%= action %>" method="POST" class="admin-card mx-auto max-w-2xl space-y-5 p-6">
+  <div>
+    <label class="admin-label">Tên vị trí</label>
+    <input type="text" name="title" required value="<%= job ? job.title : '' %>" class="admin-input" />
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Phòng ban</label>
+      <input type="text" name="department" value="<%= job ? job.department : '' %>" class="admin-input" />
+    </div>
+    <div>
+      <label class="admin-label">Địa điểm làm việc</label>
+      <input type="text" name="location" value="<%= job ? job.location : '' %>" class="admin-input" />
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Loại hình</label>
+      <select name="type" class="admin-input">
+        <option <%= job && job.type === 'Toàn thời gian' ? 'selected' : '' %>>Toàn thời gian</option>
+        <option <%= job && job.type === 'Bán thời gian' ? 'selected' : '' %>>Bán thời gian</option>
+        <option <%= job && job.type === 'Thời vụ' ? 'selected' : '' %>>Thời vụ</option>
+      </select>
+    </div>
+    <div>
+      <label class="admin-label">Trạng thái</label>
+      <select name="status" class="admin-input">
+        <option value="open" <%= job && job.status === 'open' ? 'selected' : '' %>>Đang tuyển</option>
+        <option value="closed" <%= job && job.status === 'closed' ? 'selected' : '' %>>Đã đóng</option>
+      </select>
+    </div>
+  </div>
+  <div>
+    <label class="admin-label">Mô tả công việc</label>
+    <textarea name="description" rows="5" class="admin-input"><%= job ? job.description : '' %></textarea>
+  </div>
+  <button type="submit" class="admin-btn-primary w-full">💾 <%= isEdit ? 'Lưu thay đổi' : 'Thêm vị trí' %></button>
+</form>

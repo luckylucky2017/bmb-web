@@ -1,0 +1,76 @@
+<%- include('../partials/page-header', { pageTitle: 'Liên hệ với chúng tôi', pageSubtitle: 'BMB Việt Nam luôn sẵn sàng lắng nghe và hỗ trợ bạn.', eyebrow: 'Liên hệ' }) %>
+
+<section class="py-20">
+  <div class="container-page grid gap-12 lg:grid-cols-2">
+    <div>
+      <span class="section-eyebrow">Thông tin liên hệ</span>
+      <h2 class="section-title">Kết nối cùng BMB Việt Nam</h2>
+      <div class="mt-8 space-y-6">
+        <div class="flex items-start gap-4">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-xl">📍</span>
+          <div>
+            <p class="font-display font-bold text-slate-900">Kho giao hàng</p>
+            <p class="mt-1 text-sm text-slate-500"><%= site.address %></p>
+            <% if (site.address_2) { %><p class="mt-1 text-sm text-slate-500"><%= site.address_2 %></p><% } %>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-red-50 text-xl">📞</span>
+          <div>
+            <p class="font-display font-bold text-slate-900">ĐT / Zalo đặt hàng</p>
+            <p class="mt-1 text-sm text-slate-500"><%= site.hotline %><% if (site.hotline_2) { %> - <%= site.hotline_2 %><% } %></p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-aqua-500/10 text-xl">✉️</span>
+          <div>
+            <p class="font-display font-bold text-slate-900">Email</p>
+            <p class="mt-1 text-sm text-slate-500"><%= site.email %></p>
+          </div>
+        </div>
+        <div class="flex items-start gap-4">
+          <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-leaf-500/10 text-xl">🕒</span>
+          <div>
+            <p class="font-display font-bold text-slate-900">Giờ làm việc văn phòng</p>
+            <p class="mt-1 text-sm text-slate-500"><%= site.working_hours %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-10 aspect-[4/3] overflow-hidden rounded-2xl bg-gradient-to-br from-brand-700 to-aqua-500"></div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-100 p-8 shadow-soft">
+      <h3 class="font-display text-xl font-bold text-slate-900">Gửi yêu cầu cho chúng tôi</h3>
+      <p class="mt-2 text-sm text-slate-500">Điền thông tin bên dưới, đội ngũ BMB Việt Nam sẽ phản hồi trong vòng 24 giờ.</p>
+
+      <% if (submitted) { %>
+        <div class="mt-6 rounded-xl bg-leaf-500/10 p-4 text-sm font-semibold text-leaf-600">
+          Cảm ơn bạn đã liên hệ! Đây là bản demo &mdash; yêu cầu chưa được gửi thực tế.
+        </div>
+      <% } %>
+
+      <form action="/lien-he" method="POST" class="mt-6 space-y-5">
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Họ và tên</label>
+            <input type="text" name="name" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+          </div>
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Số điện thoại</label>
+            <input type="tel" name="phone" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+          </div>
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-slate-700">Email</label>
+          <input type="email" name="email" class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+        </div>
+        <div>
+          <label class="text-sm font-semibold text-slate-700">Nội dung</label>
+          <textarea name="message" rows="4" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"></textarea>
+        </div>
+        <button type="submit" class="btn-primary w-full">Gửi yêu cầu</button>
+      </form>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,57 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Sản phẩm</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= products.length %> sản phẩm trong danh mục.</p>
+  </div>
+  <a href="/admin/san-pham/moi" class="admin-btn-primary">+ Thêm sản phẩm</a>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Sản phẩm</th>
+        <th>Danh mục</th>
+        <th>Giá</th>
+        <th>Trạng thái</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!products.length) { %>
+        <tr><td colspan="5" class="py-10 text-center text-slate-400">Chưa có sản phẩm nào.</td></tr>
+      <% } %>
+      <% products.forEach(function(p) { %>
+        <tr>
+          <td>
+            <div class="flex items-center gap-3">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-100">
+                <img src="<%= p.image %>" alt="" class="h-full w-full object-contain" />
+              </div>
+              <div>
+                <p class="font-semibold text-slate-900"><%= p.name %></p>
+                <p class="text-xs text-slate-400"><%= p.volume %></p>
+              </div>
+            </div>
+          </td>
+          <td class="text-slate-500"><%= p.category %></td>
+          <td class="font-semibold text-red-600"><%= formatVND(p.price) %></td>
+          <td>
+            <span class="badge <%= p.status === 'published' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
+              <%= p.status === 'published' ? 'Đang hiển thị' : 'Nháp' %>
+            </span>
+          </td>
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+              <a href="/san-pham/<%= p.slug %>" target="_blank" class="admin-btn-outline !px-3 !py-1.5">Xem</a>
+              <a href="/admin/san-pham/<%= p.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+              <form action="/admin/san-pham/<%= p.id %>/xoa" method="POST" data-confirm="Xoá sản phẩm này?">
+                <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

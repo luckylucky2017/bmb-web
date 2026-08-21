@@ -1,0 +1,52 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Người dùng quản trị</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= users.length %> tài khoản.</p>
+  </div>
+  <a href="/admin/nguoi-dung/moi" class="admin-btn-primary">+ Thêm tài khoản</a>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Người dùng</th>
+        <th>Vai trò</th>
+        <th>Trạng thái</th>
+        <th>Ngày tạo</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% const ROLE_LABELS = { superadmin: "Quản trị cấp cao", admin: "Quản trị viên", editor: "Biên tập viên" }; %>
+      <% users.forEach(function(u) { %>
+        <tr>
+          <td>
+            <div class="flex items-center gap-3">
+              <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-100 font-display text-sm font-bold text-brand-700"><%= u.name.trim().charAt(0).toUpperCase() %></span>
+              <div>
+                <p class="font-semibold text-slate-900"><%= u.name %></p>
+                <p class="text-xs text-slate-400"><%= u.email %></p>
+              </div>
+            </div>
+          </td>
+          <td class="text-slate-500"><%= ROLE_LABELS[u.role] || u.role %></td>
+          <td>
+            <span class="badge <%= u.active ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>"><%= u.active ? 'Hoạt động' : 'Đã khoá' %></span>
+          </td>
+          <td class="text-slate-500"><%= formatDate(u.created_at) %></td>
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+              <a href="/admin/nguoi-dung/<%= u.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+              <% if (u.id !== currentUser.id) { %>
+                <form action="/admin/nguoi-dung/<%= u.id %>/xoa" method="POST" data-confirm="Xoá tài khoản này?">
+                  <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+                </form>
+              <% } %>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

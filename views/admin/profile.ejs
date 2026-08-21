@@ -1,0 +1,20 @@
+<div class="mb-6">
+  <h1 class="font-display text-xl font-bold text-slate-900">Tài khoản của tôi</h1>
+  <p class="mt-1 text-sm text-slate-500">Cập nhật thông tin đăng nhập của bạn.</p>
+</div>
+
+<form action="/admin/tai-khoan" method="POST" class="admin-card mx-auto max-w-xl space-y-5 p-6">
+  <div>
+    <label class="admin-label">Họ và tên</label>
+    <input type="text" name="name" required value="<%= currentUser.name %>" class="admin-input" />
+  </div>
+  <div>
+    <label class="admin-label">Email</label>
+    <input type="email" name="email" required value="<%= currentUser.email %>" class="admin-input" />
+  </div>
+  <div>
+    <label class="admin-label">Mật khẩu mới (để trống nếu không đổi)</label>
+    <input type="password" name="password" class="admin-input" />
+  </div>
+  <button type="submit" class="admin-btn-primary w-full">💾 Lưu thay đổi</button>
+</form>

@@ -1,0 +1,54 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Tin tức</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= posts.length %> bài viết.</p>
+  </div>
+  <a href="/admin/tin-tuc/moi" class="admin-btn-primary">+ Viết bài mới</a>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Bài viết</th>
+        <th>Chuyên mục</th>
+        <th>Ngày đăng</th>
+        <th>Trạng thái</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!posts.length) { %>
+        <tr><td colspan="5" class="py-10 text-center text-slate-400">Chưa có bài viết nào.</td></tr>
+      <% } %>
+      <% posts.forEach(function(p) { %>
+        <tr>
+          <td>
+            <div class="flex items-center gap-3">
+              <div class="h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-slate-100">
+                <img src="<%= p.image %>" alt="" class="h-full w-full object-cover" />
+              </div>
+              <p class="line-clamp-2 max-w-xs font-semibold text-slate-900"><%= p.title %></p>
+            </div>
+          </td>
+          <td class="text-slate-500"><%= p.category %></td>
+          <td class="text-slate-500"><%= formatDate(p.published_at) %></td>
+          <td>
+            <span class="badge <%= p.status === 'published' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
+              <%= p.status === 'published' ? 'Đã đăng' : 'Nháp' %>
+            </span>
+          </td>
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+              <a href="/tin-tuc/<%= p.slug %>" target="_blank" class="admin-btn-outline !px-3 !py-1.5">Xem</a>
+              <a href="/admin/tin-tuc/<%= p.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+              <form action="/admin/tin-tuc/<%= p.id %>/xoa" method="POST" data-confirm="Xoá bài viết này?">
+                <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

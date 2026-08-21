@@ -1,0 +1,75 @@
+<%
+  const isEdit = !!product;
+  const action = isEdit ? `/admin/san-pham/${product.id}/sua` : '/admin/san-pham/moi';
+%>
+<div class="mb-6 flex items-center gap-3 text-sm text-slate-500">
+  <a href="/admin/san-pham" class="hover:text-brand-600">Sản phẩm</a>
+  <span>/</span>
+  <span class="text-slate-700"><%= isEdit ? 'Sửa sản phẩm' : 'Thêm sản phẩm' %></span>
+</div>
+
+<form action="<%= action %>" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+  <div class="admin-card space-y-5 p-6 lg:col-span-2">
+    <div>
+      <label class="admin-label">Tên sản phẩm</label>
+      <input type="text" name="name" required value="<%= product ? product.name : '' %>" class="admin-input" />
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="admin-label">Danh mục</label>
+        <input type="text" name="category" value="<%= product ? product.category : '' %>" class="admin-input" placeholder="Nước khoáng thiên nhiên" />
+      </div>
+      <div>
+        <label class="admin-label">Dung tích</label>
+        <input type="text" name="volume" value="<%= product ? product.volume : '' %>" class="admin-input" placeholder="500ml" />
+      </div>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div>
+        <label class="admin-label">Giá bán (₫)</label>
+        <input type="number" name="price" min="0" required value="<%= product ? product.price : '' %>" class="admin-input" />
+      </div>
+      <div>
+        <label class="admin-label">Đường dẫn (slug)</label>
+        <input type="text" name="slug" value="<%= product ? product.slug : '' %>" class="admin-input" placeholder="Để trống sẽ tự sinh từ tên" />
+      </div>
+    </div>
+    <div>
+      <label class="admin-label">Mô tả ngắn</label>
+      <textarea name="short_description" rows="2" class="admin-input"><%= product ? product.short_description : '' %></textarea>
+    </div>
+    <div>
+      <label class="admin-label">Mô tả chi tiết</label>
+      <textarea name="description" rows="5" class="admin-input"><%= product ? product.description : '' %></textarea>
+    </div>
+    <div>
+      <label class="admin-label">Điểm nổi bật (mỗi dòng một ý)</label>
+      <textarea name="highlights" rows="4" class="admin-input"><%= product && product.highlights ? product.highlights.join('\n') : '' %></textarea>
+    </div>
+  </div>
+
+  <div class="space-y-6">
+    <div class="admin-card p-6">
+      <label class="admin-label">Trạng thái</label>
+      <select name="status" class="admin-input">
+        <option value="published" <%= product && product.status === 'published' ? 'selected' : '' %>>Đang hiển thị</option>
+        <option value="draft" <%= product && product.status === 'draft' ? 'selected' : '' %>>Nháp (ẩn)</option>
+      </select>
+      <div class="mt-4 flex gap-3">
+        <button type="submit" class="admin-btn-primary w-full">💾 <%= isEdit ? 'Lưu thay đổi' : 'Tạo sản phẩm' %></button>
+      </div>
+    </div>
+
+    <div class="admin-card p-6">
+      <label class="admin-label">Hình ảnh sản phẩm</label>
+      <% if (product && product.image) { %>
+        <div class="mb-3 flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-slate-50">
+          <img src="<%= product.image %>" alt="" class="h-full w-full object-contain" />
+        </div>
+      <% } %>
+      <input type="file" name="image_file" accept="image/*" class="admin-input" />
+      <p class="mt-2 text-xs text-slate-400">Hoặc dán đường dẫn ảnh có sẵn:</p>
+      <input type="text" name="image" value="<%= product ? product.image : '' %>" class="admin-input mt-1" placeholder="/images/products/..." />
+    </div>
+  </div>
+</form>

@@ -1,0 +1,41 @@
+<%
+  const isEdit = !!user;
+  const action = isEdit ? `/admin/nguoi-dung/${user.id}/sua` : '/admin/nguoi-dung/moi';
+%>
+<div class="mb-6 flex items-center gap-3 text-sm text-slate-500">
+  <a href="/admin/nguoi-dung" class="hover:text-brand-600">Người dùng</a>
+  <span>/</span>
+  <span class="text-slate-700"><%= isEdit ? 'Sửa tài khoản' : 'Thêm tài khoản' %></span>
+</div>
+
+<form action="<%= action %>" method="POST" class="admin-card mx-auto max-w-xl space-y-5 p-6">
+  <div>
+    <label class="admin-label">Họ và tên</label>
+    <input type="text" name="name" required value="<%= user ? user.name : '' %>" class="admin-input" />
+  </div>
+  <div>
+    <label class="admin-label">Email</label>
+    <input type="email" name="email" required value="<%= user ? user.email : '' %>" class="admin-input" />
+  </div>
+  <div>
+    <label class="admin-label">Mật khẩu <%= isEdit ? '(để trống nếu không đổi)' : '' %></label>
+    <input type="password" name="password" <%= isEdit ? '' : 'required' %> class="admin-input" />
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Vai trò</label>
+      <select name="role" class="admin-input">
+        <option value="editor" <%= user && user.role === 'editor' ? 'selected' : '' %>>Biên tập viên</option>
+        <option value="admin" <%= user && user.role === 'admin' ? 'selected' : '' %>>Quản trị viên</option>
+        <option value="superadmin" <%= user && user.role === 'superadmin' ? 'selected' : '' %>>Quản trị cấp cao</option>
+      </select>
+    </div>
+    <div class="flex items-end pb-2">
+      <label class="flex items-center gap-2 text-sm font-semibold text-slate-700">
+        <input type="checkbox" name="active" <%= !user || user.active ? 'checked' : '' %> class="h-4 w-4 rounded border-slate-300 text-brand-600" />
+        Tài khoản hoạt động
+      </label>
+    </div>
+  </div>
+  <button type="submit" class="admin-btn-primary w-full">💾 <%= isEdit ? 'Lưu thay đổi' : 'Tạo tài khoản' %></button>
+</form>

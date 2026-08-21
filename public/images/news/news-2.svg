@@ -1,0 +1,13 @@
+<svg width="640" height="420" viewBox="0 0 640 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#39905a"/>
+      <stop offset="100%" stop-color="#7fcf8f"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="420" fill="url(#g1)"/>
+  <circle cx="540" cy="80" r="120" fill="#ffffff" opacity="0.08"/>
+  <circle cx="60" cy="360" r="160" fill="#ffffff" opacity="0.08"/>
+  <path d="M0 300 C 120 260, 220 340, 340 300 S 560 260, 640 300 V420 H0 Z" fill="#ffffff" opacity="0.12"/>
+  <text x="50%" y="52%" font-family="'Be Vietnam Pro', Arial, sans-serif" font-weight="800" font-size="34" fill="#ffffff" text-anchor="middle" opacity="0.9">LA VIE</text>
+</svg>

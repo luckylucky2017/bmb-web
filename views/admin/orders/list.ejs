@@ -1,0 +1,59 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Đơn hàng</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= orders.length %> đơn hàng phù hợp.</p>
+  </div>
+</div>
+
+<div class="admin-card mt-6 p-4">
+  <form method="GET" class="flex flex-wrap items-center gap-3">
+    <input type="text" name="q" value="<%= q %>" placeholder="Tìm theo mã đơn, tên, số điện thoại..." class="admin-input max-w-xs" />
+    <select name="status" class="admin-input max-w-[200px]">
+      <option value="">Tất cả trạng thái</option>
+      <% Object.entries(statusLabels).forEach(function([key, label]) { %>
+        <option value="<%= key %>" <%= currentStatus === key ? 'selected' : '' %>><%= label %></option>
+      <% }); %>
+    </select>
+    <button type="submit" class="admin-btn-outline">Lọc</button>
+    <% if (currentStatus || q) { %><a href="/admin/don-hang" class="text-sm font-semibold text-slate-400 hover:text-brand-600">Xoá bộ lọc</a><% } %>
+  </form>
+</div>
+
+<div class="admin-card mt-4 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Mã đơn</th>
+        <th>Khách hàng</th>
+        <th>Tổng tiền</th>
+        <th>Trạng thái</th>
+        <th>Ngày đặt</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!orders.length) { %>
+        <tr><td colspan="6" class="py-10 text-center text-slate-400">Không có đơn hàng nào phù hợp.</td></tr>
+      <% } %>
+      <%
+        const STATUS_CLS = {
+          new: "bg-blue-100 text-blue-700",
+          confirmed: "bg-amber-100 text-amber-700",
+          shipping: "bg-brand-100 text-brand-700",
+          completed: "bg-leaf-500/15 text-leaf-700",
+          cancelled: "bg-red-100 text-red-700"
+        };
+      %>
+      <% orders.forEach(function(o) { %>
+        <tr>
+          <td class="font-semibold text-slate-900"><%= o.code %></td>
+          <td><%= o.customer_name %><br /><span class="text-xs text-slate-400"><%= o.phone %></span></td>
+          <td class="font-semibold text-red-600"><%= formatVND(o.total_amount) %></td>
+          <td><span class="badge <%= STATUS_CLS[o.status] %>"><%= statusLabels[o.status] %></span></td>
+          <td class="text-slate-500"><%= formatDate(o.created_at) %></td>
+          <td class="text-right"><a href="/admin/don-hang/<%= o.id %>" class="admin-btn-outline !px-3 !py-1.5">Chi tiết</a></td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

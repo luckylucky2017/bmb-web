@@ -1,0 +1,105 @@
+<section class="border-b border-slate-100 bg-sand-50 py-4">
+  <div class="container-page text-sm text-slate-500">
+    <a href="/" class="hover:text-brand-600">Trang chủ</a> <span class="mx-1">/</span>
+    <a href="/san-pham" class="hover:text-brand-600">Sản phẩm</a> <span class="mx-1">/</span>
+    <span class="text-slate-700"><%= product.name %></span>
+  </div>
+</section>
+
+<section class="py-16">
+  <div class="container-page grid gap-12 lg:grid-cols-2 lg:items-start">
+    <div class="flex aspect-square items-center justify-center rounded-3xl bg-sand-100 p-10">
+      <img src="<%= product.image %>" alt="<%= product.name %>" class="h-full w-full object-contain" />
+    </div>
+    <div>
+      <span class="section-eyebrow"><%= product.category %></span>
+      <h1 class="mt-4 font-display text-3xl font-extrabold text-slate-900 sm:text-4xl"><%= product.name %></h1>
+      <p class="mt-2 text-sm font-semibold text-brand-600">Dung tích: <%= product.volume %></p>
+      <p class="mt-3 text-3xl font-extrabold text-red-600"><%= formatVND(product.price) %></p>
+      <p class="mt-5 text-slate-600 leading-relaxed"><%= product.description %></p>
+
+      <ul class="mt-7 space-y-3">
+        <% product.highlights.forEach(function(h) { %>
+          <li class="flex items-start gap-3 text-sm text-slate-600">
+            <span class="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-leaf-500/15 text-leaf-600">✓</span>
+            <%= h %>
+          </li>
+        <% }); %>
+      </ul>
+
+      <div class="mt-9 flex flex-wrap gap-4">
+        <a href="#dat-hang" class="btn-primary">Đặt hàng ngay</a>
+        <a href="/dai-ly" class="btn-ghost">Tìm đại lý gần bạn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dat-hang" class="bg-sand-50 py-16">
+  <div class="container-page mx-auto max-w-2xl">
+    <% if (typeof orderSubmitted !== 'undefined' && orderSubmitted) { %>
+      <div class="rounded-2xl border border-leaf-500/30 bg-leaf-500/10 p-8 text-center">
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-leaf-500 text-2xl text-white">✓</div>
+        <h2 class="mt-4 font-display text-xl font-bold text-slate-900">Đặt hàng thành công!</h2>
+        <p class="mt-2 text-sm text-slate-600">Cảm ơn bạn đã đặt hàng <strong><%= product.name %></strong>. Nhân viên BMB Việt Nam sẽ liên hệ xác nhận đơn hàng trong thời gian sớm nhất.</p>
+        <a href="/san-pham" class="btn-primary mt-6">Tiếp tục xem sản phẩm</a>
+      </div>
+    <% } else { %>
+      <div class="rounded-2xl border border-slate-100 bg-white p-8 shadow-soft">
+        <span class="section-eyebrow">Đặt hàng nhanh</span>
+        <h2 class="mt-3 font-display text-xl font-bold text-slate-900">Đặt mua <%= product.name %></h2>
+        <p class="mt-2 text-sm text-slate-500">Điền thông tin bên dưới, chúng tôi sẽ gọi điện xác nhận trước khi giao hàng.</p>
+        <form action="/san-pham/<%= product.slug %>/dat-hang" method="POST" class="mt-6 space-y-5">
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label class="text-sm font-semibold text-slate-700">Họ và tên</label>
+              <input type="text" name="customer_name" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            </div>
+            <div>
+              <label class="text-sm font-semibold text-slate-700">Số điện thoại</label>
+              <input type="tel" name="phone" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            </div>
+          </div>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label class="text-sm font-semibold text-slate-700">Email (không bắt buộc)</label>
+              <input type="email" name="email" class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            </div>
+            <div>
+              <label class="text-sm font-semibold text-slate-700">Số lượng</label>
+              <input type="number" name="quantity" min="1" value="1" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+            </div>
+          </div>
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Địa chỉ giao hàng</label>
+            <input type="text" name="address" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+          </div>
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Ghi chú</label>
+            <textarea name="note" rows="3" class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100"></textarea>
+          </div>
+          <button type="submit" class="btn-primary w-full">Xác nhận đặt hàng</button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<% if (related && related.length) { %>
+<section class="bg-white py-20">
+  <div class="container-page">
+    <h2 class="section-title">Sản phẩm liên quan</h2>
+    <div class="mt-10 grid grid-cols-2 gap-5 sm:grid-cols-3">
+      <% related.forEach(function(p) { %>
+        <a href="/san-pham/<%= p.slug %>" class="group flex flex-col overflow-hidden rounded-lg border border-slate-100 p-5 text-center transition hover:border-brand-200 hover:shadow-card">
+          <div class="flex aspect-square items-center justify-center">
+            <img src="<%= p.image %>" alt="<%= p.name %>" class="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105" />
+          </div>
+          <h3 class="mt-3 font-display text-sm font-extrabold uppercase leading-snug text-brand-700"><%= p.name %></h3>
+          <p class="mt-2 text-base font-extrabold text-red-600"><%= formatVND(p.price) %></p>
+        </a>
+      <% }); %>
+    </div>
+  </div>
+</section>
+<% } %>

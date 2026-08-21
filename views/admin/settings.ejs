@@ -1,0 +1,66 @@
+<div class="mb-6">
+  <h1 class="font-display text-xl font-bold text-slate-900">Cài đặt website</h1>
+  <p class="mt-1 text-sm text-slate-500">Thông tin này hiển thị trên header, footer và trang liên hệ của website.</p>
+</div>
+
+<form action="/admin/cai-dat" method="POST" class="admin-card mx-auto max-w-3xl space-y-5 p-6">
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Tên hiển thị website</label>
+      <input type="text" name="site_name" value="<%= settings.site_name %>" class="admin-input" />
+    </div>
+    <div>
+      <label class="admin-label">Tên công ty đầy đủ</label>
+      <input type="text" name="company_full_name" value="<%= settings.company_full_name %>" class="admin-input" />
+    </div>
+  </div>
+  <div>
+    <label class="admin-label">Khẩu hiệu / Vị thế thương hiệu</label>
+    <input type="text" name="tagline" value="<%= settings.tagline %>" class="admin-input" placeholder="Đại lý phân phối chính thức nước khoáng La Vie khu vực Hà Nội" />
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Hotline / Zalo 1</label>
+      <input type="text" name="hotline" value="<%= settings.hotline %>" class="admin-input" />
+    </div>
+    <div>
+      <label class="admin-label">Hotline / Zalo 2</label>
+      <input type="text" name="hotline_2" value="<%= settings.hotline_2 %>" class="admin-input" />
+    </div>
+  </div>
+  <div>
+    <label class="admin-label">Email liên hệ</label>
+    <input type="email" name="email" value="<%= settings.email %>" class="admin-input" />
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Địa chỉ kho số 01</label>
+      <input type="text" name="address" value="<%= settings.address %>" class="admin-input" />
+    </div>
+    <div>
+      <label class="admin-label">Địa chỉ kho số 02</label>
+      <input type="text" name="address_2" value="<%= settings.address_2 %>" class="admin-input" />
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Giờ làm việc</label>
+      <input type="text" name="working_hours" value="<%= settings.working_hours %>" class="admin-input" />
+    </div>
+    <div>
+      <label class="admin-label">Mã số thuế</label>
+      <input type="text" name="tax_code" value="<%= settings.tax_code %>" class="admin-input" />
+    </div>
+  </div>
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <label class="admin-label">Facebook URL</label>
+      <input type="text" name="facebook_url" value="<%= settings.facebook_url %>" class="admin-input" placeholder="https://facebook.com/..." />
+    </div>
+    <div>
+      <label class="admin-label">Zalo URL</label>
+      <input type="text" name="zalo_url" value="<%= settings.zalo_url %>" class="admin-input" placeholder="https://zalo.me/..." />
+    </div>
+  </div>
+  <button type="submit" class="admin-btn-primary w-full">💾 Lưu cài đặt</button>
+</form>

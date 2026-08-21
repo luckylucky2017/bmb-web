@@ -1,0 +1,46 @@
+<%- include('../partials/page-header', { pageTitle: 'Tuyển dụng', pageSubtitle: 'Gia nhập BMB Việt Nam &mdash; đại lý phân phối La Vie hàng đầu khu vực Hà Nội.', eyebrow: 'Cơ hội nghề nghiệp' }) %>
+
+<section class="py-20">
+  <div class="container-page grid gap-10 lg:grid-cols-3">
+    <div class="card p-7 text-center">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-2xl">🌟</div>
+      <h3 class="mt-5 font-display text-lg font-bold text-slate-900">Môi trường năng động</h3>
+      <p class="mt-2 text-sm text-slate-500">Không gian làm việc chuyên nghiệp, khuyến khích sáng tạo và phát triển bản thân.</p>
+    </div>
+    <div class="card p-7 text-center">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-aqua-500/10 text-2xl">📈</div>
+      <h3 class="mt-5 font-display text-lg font-bold text-slate-900">Cơ hội thăng tiến</h3>
+      <p class="mt-2 text-sm text-slate-500">Lộ trình phát triển sự nghiệp rõ ràng, đào tạo chuyên sâu theo từng vị trí.</p>
+    </div>
+    <div class="card p-7 text-center">
+      <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-leaf-500/10 text-2xl">💛</div>
+      <h3 class="mt-5 font-display text-lg font-bold text-slate-900">Chế độ đãi ngộ tốt</h3>
+      <p class="mt-2 text-sm text-slate-500">Lương thưởng cạnh tranh, bảo hiểm đầy đủ và các phúc lợi hấp dẫn khác.</p>
+    </div>
+  </div>
+</section>
+
+<section class="bg-white py-20">
+  <div class="container-page">
+    <div class="max-w-xl">
+      <span class="section-eyebrow">Vị trí đang tuyển</span>
+      <h2 class="section-title">Cơ hội việc làm hiện tại</h2>
+    </div>
+
+    <div class="mt-10 divide-y divide-slate-100 rounded-2xl border border-slate-100 shadow-soft">
+      <% jobs.forEach(function(j) { %>
+        <div class="flex flex-col gap-3 p-6 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h3 class="font-display text-base font-bold text-slate-900"><%= j.title %></h3>
+            <div class="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm text-slate-500">
+              <span class="flex items-center gap-1">📍 <%= j.location %></span>
+              <span class="flex items-center gap-1">🏢 <%= j.department %></span>
+              <span class="flex items-center gap-1">🕒 <%= j.type %></span>
+            </div>
+          </div>
+          <a href="/lien-he" class="btn-ghost shrink-0">Ứng tuyển ngay</a>
+        </div>
+      <% }); %>
+    </div>
+  </div>
+</section>
