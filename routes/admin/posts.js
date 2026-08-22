@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Post = require("../../models/Post");
+const Category = require("../../models/Category");
 const upload = require("../../middleware/upload");
 const asyncHandler = require("../../middleware/asyncHandler");
 
@@ -12,9 +13,13 @@ router.get(
   })
 );
 
-router.get("/moi", (req, res) => {
-  res.render("admin/posts/form", { title: "Thêm bài viết | BMB Việt Nam CMS", post: null });
-});
+router.get(
+  "/moi",
+  asyncHandler(async (req, res) => {
+    const categories = await Category.all({ type: "post" });
+    res.render("admin/posts/form", { title: "Thêm bài viết | BMB Việt Nam CMS", post: null, categories });
+  })
+);
 
 router.post(
   "/moi",
@@ -37,7 +42,8 @@ router.get(
   asyncHandler(async (req, res) => {
     const post = await Post.findById(req.params.id);
     if (!post) return res.status(404).send("Không tìm thấy bài viết");
-    res.render("admin/posts/form", { title: "Sửa bài viết | BMB Việt Nam CMS", post });
+    const categories = await Category.all({ type: "post" });
+    res.render("admin/posts/form", { title: "Sửa bài viết | BMB Việt Nam CMS", post, categories });
   })
 );
 

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Product = require("../../models/Product");
+const Category = require("../../models/Category");
 const upload = require("../../middleware/upload");
 const asyncHandler = require("../../middleware/asyncHandler");
 
@@ -12,9 +13,13 @@ router.get(
   })
 );
 
-router.get("/moi", (req, res) => {
-  res.render("admin/products/form", { title: "Thêm sản phẩm | BMB Việt Nam CMS", product: null });
-});
+router.get(
+  "/moi",
+  asyncHandler(async (req, res) => {
+    const categories = await Category.all({ type: "product" });
+    res.render("admin/products/form", { title: "Thêm sản phẩm | BMB Việt Nam CMS", product: null, categories });
+  })
+);
 
 router.post("/upload-anh", (req, res) => {
   upload.single("image")(req, res, (err) => {
@@ -45,7 +50,8 @@ router.get(
   asyncHandler(async (req, res) => {
     const product = await Product.findById(req.params.id);
     if (!product) return res.status(404).send("Không tìm thấy sản phẩm");
-    res.render("admin/products/form", { title: "Sửa sản phẩm | BMB Việt Nam CMS", product });
+    const categories = await Category.all({ type: "product" });
+    res.render("admin/products/form", { title: "Sửa sản phẩm | BMB Việt Nam CMS", product, categories });
   })
 );
 

@@ -1,88 +1,54 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const editorEl = document.getElementById("description-editor");
-  if (!editorEl || typeof Quill === "undefined") return;
+  const targetEl = document.getElementById("description-editor");
+  if (!targetEl || typeof tinymce === "undefined") return;
 
   const UPLOAD_URL = "/admin/san-pham/upload-anh";
-  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+  const EDITOR_ID = "description-editor";
 
-  const quill = new Quill("#description-editor", {
-    theme: "snow",
-    modules: { toolbar: "#description-toolbar" },
-    placeholder: "Mô tả chi tiết sản phẩm..."
-  });
-
-  const contentInput = document.getElementById("description-input");
-  if (contentInput.value) {
-    quill.root.innerHTML = contentInput.value;
+  function syncHiddenInput(editor) {
+    document.getElementById("description-input").value = editor.getContent();
   }
-  quill.on("text-change", () => {
-    contentInput.value = quill.root.innerHTML;
+
+  tinymce.init({
+    selector: "#" + EDITOR_ID,
+    inline: true,
+    fixed_toolbar_container_target: document.getElementById("description-toolbar-mount"),
+    toolbar_location: "top",
+    toolbar_sticky: false,
+    toolbar_mode: "wrap",
+    entity_encoding: "raw",
+    convert_urls: false,
+    menubar: false,
+    statusbar: false,
+    branding: false,
+    placeholder: "Mô tả chi tiết sản phẩm...",
+    plugins: "advlist autolink lists link image charmap searchreplace visualblocks code fullscreen media table wordcount",
+    toolbar:
+      "undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | " +
+      "forecolor backcolor | alignleft aligncenter alignright alignjustify | " +
+      "bullist numlist outdent indent | blockquote table link image media | removeformat code | fullscreen",
+    block_formats: "Đoạn văn=p; Tiêu đề 1=h1; Tiêu đề 2=h2; Tiêu đề 3=h3; Tiêu đề 4=h4; Trích dẫn=blockquote",
+    paste_data_images: true,
+    automatic_uploads: true,
+    images_upload_handler: (blobInfo) =>
+      new Promise((resolve, reject) => {
+        const formData = new FormData();
+        formData.append("image", blobInfo.blob(), blobInfo.filename());
+        fetch(UPLOAD_URL, { method: "POST", body: formData })
+          .then((res) => {
+            if (!res.ok) return res.json().then((data) => Promise.reject(data.error || "upload failed"));
+            return res.json();
+          })
+          .then((data) => resolve(data.url))
+          .catch(() => reject("Tải ảnh lên thất bại. Chỉ chấp nhận jpg, png, webp, gif."));
+      }),
+    setup: (editor) => {
+      editor.on("change input undo redo blur", () => syncHiddenInput(editor));
+    }
   });
+
   document.getElementById("product-form")?.addEventListener("submit", () => {
-    contentInput.value = quill.root.innerHTML;
-  });
-
-  async function uploadImage(file) {
-    if (!ALLOWED_TYPES.includes(file.type)) {
-      alert("Chỉ chấp nhận ảnh jpg, png, webp hoặc gif.");
-      return null;
-    }
-    const formData = new FormData();
-    formData.append("image", file);
-    const res = await fetch(UPLOAD_URL, { method: "POST", body: formData });
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      alert(data.error || "Tải ảnh lên thất bại.");
-      return null;
-    }
-    const data = await res.json();
-    return data.url;
-  }
-
-  async function insertImageAtCursor(file) {
-    const range = quill.getSelection(true);
-    const placeholderIndex = range ? range.index : quill.getLength();
-    const url = await uploadImage(file);
-    if (url) {
-      quill.insertEmbed(placeholderIndex, "image", url, "user");
-      quill.setSelection(placeholderIndex + 1, 0);
-    }
-  }
-
-  // Toolbar image button: opens a file picker and uploads the chosen image.
-  quill.getModule("toolbar").addHandler("image", () => {
-    const input = document.createElement("input");
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", ALLOWED_TYPES.join(","));
-    input.addEventListener("change", () => {
-      const file = input.files[0];
-      if (file) insertImageAtCursor(file);
-    });
-    input.click();
-  });
-
-  // Paste an image directly (e.g. Ctrl+V a screenshot) instead of embedding it as base64.
-  quill.root.addEventListener("paste", (e) => {
-    const items = e.clipboardData && e.clipboardData.items;
-    if (!items) return;
-    for (const item of items) {
-      if (item.type && item.type.startsWith("image/")) {
-        e.preventDefault();
-        const file = item.getAsFile();
-        if (file) insertImageAtCursor(file);
-        return;
-      }
-    }
-  });
-
-  // Drag-and-drop an image file into the editor.
-  quill.root.addEventListener("drop", (e) => {
-    const files = e.dataTransfer && e.dataTransfer.files;
-    if (!files || !files.length) return;
-    const file = files[0];
-    if (file.type && file.type.startsWith("image/")) {
-      e.preventDefault();
-      insertImageAtCursor(file);
-    }
+    const editor = tinymce.get(EDITOR_ID);
+    if (editor) syncHiddenInput(editor);
   });
 });

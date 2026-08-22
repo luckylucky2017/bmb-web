@@ -35,6 +35,48 @@ async function isFreshDatabase() {
   return rows[0].c === 0;
 }
 
+function slugify(str) {
+  return str
+    .toString()
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/đ/gi, "d")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+// Existing installs (already seeded before the categories table existed)
+// get their category list derived from whatever free-text values their
+// products/posts already used, so nothing has to be entered by hand.
+async function backfillCategoriesIfEmpty() {
+  const [[{ c }]] = await pool.query("SELECT COUNT(*) as c FROM categories");
+  if (c > 0) return;
+
+  const [productCats] = await pool.query(
+    "SELECT DISTINCT category FROM products WHERE category IS NOT NULL AND category <> ''"
+  );
+  let order = 0;
+  for (const row of productCats) {
+    await pool.query(
+      "INSERT IGNORE INTO categories (type, name, slug, sort_order) VALUES ('product', ?, ?, ?)",
+      [row.category, slugify(row.category), order++]
+    );
+  }
+
+  const [postCats] = await pool.query(
+    "SELECT DISTINCT category FROM posts WHERE category IS NOT NULL AND category <> ''"
+  );
+  order = 0;
+  for (const row of postCats) {
+    await pool.query(
+      "INSERT IGNORE INTO categories (type, name, slug, sort_order) VALUES ('post', ?, ?, ?)",
+      [row.category, slugify(row.category), order++]
+    );
+  }
+}
+
 async function seed() {
   const { products } = require("../data/products");
   const { news } = require("../data/news");
@@ -127,6 +169,7 @@ async function init() {
   if (await isFreshDatabase()) {
     await seed();
   }
+  await backfillCategoriesIfEmpty();
 }
 
 module.exports = { pool, init, dbConfig };

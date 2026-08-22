@@ -17,7 +17,16 @@
     <div class="grid grid-cols-2 gap-4">
       <div>
         <label class="admin-label">Chuyên mục</label>
-        <input type="text" name="category" value="<%= post ? post.category : '' %>" class="admin-input" placeholder="Doanh nghiệp / Cộng đồng / Sản phẩm" />
+        <select name="category" class="admin-input">
+          <option value="">— Chọn chuyên mục —</option>
+          <% categories.forEach(function(c) { %>
+            <option value="<%= c.name %>" <%= post && post.category === c.name ? 'selected' : '' %>><%= c.name %></option>
+          <% }); %>
+          <% if (post && post.category && !categories.some(c => c.name === post.category)) { %>
+            <option value="<%= post.category %>" selected><%= post.category %></option>
+          <% } %>
+        </select>
+        <p class="mt-1 text-xs text-slate-400">Quản lý danh sách tại <a href="/admin/danh-muc?type=post" class="text-brand-600 hover:underline">Danh mục</a>.</p>
       </div>
       <div>
         <label class="admin-label">Đường dẫn (slug)</label>

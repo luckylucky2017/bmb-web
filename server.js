@@ -44,8 +44,12 @@ app.use(
         scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com", "https://cdn.jsdelivr.net"],
         fontSrc: ["'self'", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:"],
+        imgSrc: ["'self'", "data:", "blob:"],
         connectSrc: ["'self'"],
+        // Embedded video (Quill/TinyMCE video button) only ever points at
+        // these trusted providers — enforced server-side too, see
+        // allowedIframeHostnames in models/sanitizeContent.js.
+        frameSrc: ["'self'", "https://www.youtube.com", "https://www.youtube-nocookie.com", "https://player.vimeo.com"],
         objectSrc: ["'none'"],
         baseUri: ["'self'"],
         frameAncestors: ["'self'"],

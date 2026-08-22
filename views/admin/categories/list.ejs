@@ -1,0 +1,45 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Danh mục</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= categories.length %> danh mục <%= type === 'post' ? 'tin tức' : 'sản phẩm' %>.</p>
+  </div>
+  <a href="/admin/danh-muc/moi?type=<%= type %>" class="admin-btn-primary">+ Thêm danh mục</a>
+</div>
+
+<div class="mt-6 flex gap-2 border-b border-slate-200">
+  <a href="/admin/danh-muc?type=product" class="border-b-2 px-4 py-2 text-sm font-semibold <%= type === 'product' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-700' %>">Danh mục sản phẩm</a>
+  <a href="/admin/danh-muc?type=post" class="border-b-2 px-4 py-2 text-sm font-semibold <%= type === 'post' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-700' %>">Danh mục tin tức</a>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Tên danh mục</th>
+        <th>Đường dẫn (slug)</th>
+        <th>Thứ tự</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!categories.length) { %>
+        <tr><td colspan="4" class="py-10 text-center text-slate-400">Chưa có danh mục nào.</td></tr>
+      <% } %>
+      <% categories.forEach(function(c) { %>
+        <tr>
+          <td class="font-semibold text-slate-900"><%= c.name %></td>
+          <td class="text-slate-500"><%= c.slug %></td>
+          <td class="text-slate-500"><%= c.sort_order %></td>
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+              <a href="/admin/danh-muc/<%= c.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+              <form action="/admin/danh-muc/<%= c.id %>/xoa" method="POST" data-confirm="Xoá danh mục này? Các sản phẩm/bài viết đã gán danh mục này sẽ không bị ảnh hưởng.">
+                <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>
