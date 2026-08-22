@@ -1,7 +1,7 @@
 # BMB Việt Nam — Website + CMS
 
 Website công khai và hệ thống quản trị nội dung (CMS) cho **Công ty TNHH BMB Việt Nam** —
-đại lý phân phối chính thức nước khoáng **La Vie** khu vực Hà Nội.
+đại lý phân phối chính thức nước khoáng **Lavie** khu vực Hà Nội.
 
 Tài liệu này để bàn giao code cho người tiếp theo — đọc hết trước khi sửa gì.
 
@@ -55,7 +55,7 @@ npm run dev                # nodemon, tự restart khi sửa .js/.ejs
 ```
 
 Lần chạy đầu tiên, `db.init()` trong `server.js` sẽ tự **tạo toàn bộ bảng + seed dữ liệu mẫu**
-(6 sản phẩm La Vie, 4 bài tin tức, danh sách quận huyện Hà Nội, 1 tài khoản admin) — xem
+(6 sản phẩm Lavie, 4 bài tin tức, danh sách quận huyện Hà Nội, 1 tài khoản admin) — xem
 `db/database.js` hàm `seed()`. Tài khoản admin mặc định in ra console khi seed chạy lần đầu
 (`admin@bmbvietnam.vn` / `Admin@123`) — **đổi ngay sau khi đăng nhập lần đầu trên môi trường thật**.
 

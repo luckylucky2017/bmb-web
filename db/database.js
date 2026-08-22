@@ -95,7 +95,7 @@ async function seed() {
   const defaultSettings = {
     site_name: "BMB Việt Nam",
     company_full_name: "Công ty TNHH BMB Việt Nam",
-    tagline: "Đại lý phân phối chính thức nước khoáng La Vie khu vực Hà Nội",
+    tagline: "Đại lý phân phối chính thức nước khoáng Lavie khu vực Hà Nội",
     theme: "default",
     hotline: "096 884 5580",
     hotline_2: "097 511 8889",

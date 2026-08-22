@@ -211,11 +211,11 @@ app.get(
       Post.all({ status: "published", limit: 3 })
     ]);
     res.render("pages/home", {
-      title: "Đại Lý Nước Khoáng La Vie Hà Nội - Phân Phối Nước Sạch, Giao Tận Nhà | BMB Việt Nam",
+      title: "Đại Lý Nước Khoáng Lavie Hà Nội - Phân Phối Nước Sạch, Giao Tận Nhà | BMB Việt Nam",
       description:
-        "BMB Việt Nam - đại lý nước La Vie chính hãng tại Hà Nội. Chuyên phân phối nước khoáng, nước tinh khiết, nước sạch đóng bình 19L, giao nước tận nhà trong ngày.",
+        "BMB Việt Nam - đại lý nước Lavie chính hãng tại Hà Nội. Chuyên phân phối nước khoáng, nước tinh khiết, nước sạch đóng bình 19L, giao nước tận nhà trong ngày.",
       keywords:
-        "nước khoáng, nước lavie, nước sạch, phân phối nước, đại lý nước, đại lý nước lavie hà nội, nước khoáng la vie, giao nước tận nhà hà nội, nước đóng bình 19l, nước tinh khiết hà nội, đặt nước lavie, mua nước lavie giá rẻ",
+        "nước khoáng, nước lavie, nước sạch, phân phối nước, đại lý nước, đại lý nước lavie hà nội, nước khoáng lavie, giao nước tận nhà hà nội, nước đóng bình 19l, nước tinh khiết hà nội, đặt nước lavie, mua nước lavie giá rẻ",
       products: products.slice(0, 4),
       news
     });
@@ -224,9 +224,9 @@ app.get(
 
 app.get("/gioi-thieu", (req, res) => {
   res.render("pages/about", {
-    title: "Giới Thiệu Đại Lý Nước La Vie Hà Nội | BMB Việt Nam",
+    title: "Giới Thiệu Đại Lý Nước Lavie Hà Nội | BMB Việt Nam",
     description:
-      "BMB Việt Nam là đại lý phân phối nước khoáng La Vie chính thức tại Hà Nội, chuyên cung cấp nước sạch, nước tinh khiết cho hộ gia đình và văn phòng.",
+      "BMB Việt Nam là đại lý phân phối nước khoáng Lavie chính thức tại Hà Nội, chuyên cung cấp nước sạch, nước tinh khiết cho hộ gia đình và văn phòng.",
     keywords: "đại lý nước lavie hà nội, phân phối nước lavie, giới thiệu đại lý nước, nước sạch hà nội, đại lý nước khoáng"
   });
 });
@@ -236,9 +236,9 @@ app.get(
   asyncHandler(async (req, res) => {
     const products = await Product.all({ status: "published" });
     res.render("pages/products", {
-      title: "Bảng Giá Nước Khoáng La Vie - Đầy Đủ Các Loại | BMB Việt Nam",
+      title: "Bảng Giá Nước Khoáng Lavie - Đầy Đủ Các Loại | BMB Việt Nam",
       description:
-        "Bảng giá đầy đủ nước khoáng La Vie, nước tinh khiết, nước đóng bình 19L chính hãng. Đại lý nước La Vie Hà Nội, giao hàng tận nơi, giá tốt nhất thị trường.",
+        "Bảng giá đầy đủ nước khoáng Lavie, nước tinh khiết, nước đóng bình 19L chính hãng. Đại lý nước Lavie Hà Nội, giao hàng tận nơi, giá tốt nhất thị trường.",
       keywords:
         "giá nước lavie, bảng giá nước khoáng lavie, nước lavie 500ml, nước lavie 19l, mua nước khoáng, đại lý nước khoáng hà nội, nước tinh khiết",
       products
@@ -255,7 +255,7 @@ app.get(
     }
     const related = await Product.related(product.id, 3);
     res.render("pages/product-detail", {
-      title: `${product.name} - Giá ${res.locals.formatVND(product.price)} | Đại Lý La Vie Hà Nội`,
+      title: `${product.name} - Giá ${res.locals.formatVND(product.price)} | Đại Lý Lavie Hà Nội`,
       description: `${product.short_description} Mua ${product.name} chính hãng, giao tận nhà tại Hà Nội qua đại lý BMB Việt Nam.`,
       keywords: `${product.name}, nước lavie, nước khoáng, ${product.category}, mua nước lavie, giá nước lavie`,
       product,
@@ -275,7 +275,7 @@ app.post(
     await Order.createFromProduct(product, req.body);
     const related = await Product.related(product.id, 3);
     res.render("pages/product-detail", {
-      title: `${product.name} - Giá ${res.locals.formatVND(product.price)} | Đại Lý La Vie Hà Nội`,
+      title: `${product.name} - Giá ${res.locals.formatVND(product.price)} | Đại Lý Lavie Hà Nội`,
       description: `${product.short_description} Mua ${product.name} chính hãng, giao tận nhà tại Hà Nội qua đại lý BMB Việt Nam.`,
       keywords: `${product.name}, nước lavie, nước khoáng, ${product.category}, mua nước lavie, giá nước lavie`,
       product,
@@ -299,8 +299,8 @@ app.get(
   asyncHandler(async (req, res) => {
     const news = await Post.all({ status: "published" });
     res.render("pages/news", {
-      title: "Tin Tức Đại Lý Nước La Vie Hà Nội | BMB Việt Nam",
-      description: "Cập nhật tin tức, chương trình khuyến mãi nước khoáng La Vie và hoạt động mới nhất từ đại lý BMB Việt Nam tại Hà Nội.",
+      title: "Tin Tức Đại Lý Nước Lavie Hà Nội | BMB Việt Nam",
+      description: "Cập nhật tin tức, chương trình khuyến mãi nước khoáng Lavie và hoạt động mới nhất từ đại lý BMB Việt Nam tại Hà Nội.",
       keywords: "tin tức nước lavie, khuyến mãi nước khoáng, đại lý nước hà nội, tin tức đại lý nước",
       news
     });
@@ -330,9 +330,9 @@ app.get(
   asyncHandler(async (req, res) => {
     const distributors = await Distributor.grouped();
     res.render("pages/distributors", {
-      title: "Khu Vực Giao Nước La Vie Tại Hà Nội - Tất Cả Quận Huyện | BMB Việt Nam",
+      title: "Khu Vực Giao Nước Lavie Tại Hà Nội - Tất Cả Quận Huyện | BMB Việt Nam",
       description:
-        "BMB Việt Nam giao nước La Vie, nước sạch tận nhà tại tất cả các quận huyện Hà Nội: Cầu Giấy, Đống Đa, Hà Đông, Thanh Xuân... Giao nhanh 2-4 giờ.",
+        "BMB Việt Nam giao nước Lavie, nước sạch tận nhà tại tất cả các quận huyện Hà Nội: Cầu Giấy, Đống Đa, Hà Đông, Thanh Xuân... Giao nhanh 2-4 giờ.",
       keywords:
         "giao nước tận nhà hà nội, phân phối nước hà nội, đại lý nước theo quận, giao nước cầu giấy, giao nước đống đa, giao nước hà đông, giao nước thanh xuân",
       distributors
@@ -346,7 +346,7 @@ app.get(
     const jobs = await Job.all({ status: "open" });
     res.render("pages/careers", {
       title: "Tuyển Dụng Nhân Viên Giao Nước Hà Nội | BMB Việt Nam",
-      description: "Cơ hội nghề nghiệp tại đại lý nước La Vie BMB Việt Nam - tuyển nhân viên giao nước, kinh doanh, kho vận tại Hà Nội.",
+      description: "Cơ hội nghề nghiệp tại đại lý nước Lavie BMB Việt Nam - tuyển nhân viên giao nước, kinh doanh, kho vận tại Hà Nội.",
       keywords: "tuyển dụng nhân viên giao nước, việc làm đại lý nước hà nội, tuyển tài xế giao nước",
       jobs
     });
@@ -355,8 +355,8 @@ app.get(
 
 app.get("/lien-he", (req, res) => {
   res.render("pages/contact", {
-    title: "Liên Hệ Đại Lý Nước La Vie Hà Nội - Hotline Đặt Nước | BMB Việt Nam",
-    description: "Liên hệ đại lý nước La Vie BMB Việt Nam tại Hà Nội. Hotline đặt nước nhanh, giao nước sạch tận nhà trong ngày.",
+    title: "Liên Hệ Đại Lý Nước Lavie Hà Nội - Hotline Đặt Nước | BMB Việt Nam",
+    description: "Liên hệ đại lý nước Lavie BMB Việt Nam tại Hà Nội. Hotline đặt nước nhanh, giao nước sạch tận nhà trong ngày.",
     keywords: "liên hệ đại lý nước, hotline đặt nước lavie, số điện thoại đại lý nước hà nội",
     submitted: false
   });
@@ -369,8 +369,8 @@ app.post(
   asyncHandler(async (req, res) => {
     await ContactMessage.create(req.body);
     res.render("pages/contact", {
-      title: "Liên Hệ Đại Lý Nước La Vie Hà Nội - Hotline Đặt Nước | BMB Việt Nam",
-      description: "Liên hệ đại lý nước La Vie BMB Việt Nam tại Hà Nội. Hotline đặt nước nhanh, giao nước sạch tận nhà trong ngày.",
+      title: "Liên Hệ Đại Lý Nước Lavie Hà Nội - Hotline Đặt Nước | BMB Việt Nam",
+      description: "Liên hệ đại lý nước Lavie BMB Việt Nam tại Hà Nội. Hotline đặt nước nhanh, giao nước sạch tận nhà trong ngày.",
       keywords: "liên hệ đại lý nước, hotline đặt nước lavie, số điện thoại đại lý nước hà nội",
       submitted: true
     });
