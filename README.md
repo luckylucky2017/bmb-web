@@ -19,23 +19,30 @@ Tài liệu này để bàn giao code cho người tiếp theo — đọc hết 
 bmb-vietnam/
 ├── server.js              # Toàn bộ route công khai (trang chủ, sản phẩm, tin tức...) + khởi tạo app
 ├── db/
-│   ├── database.js        # Kết nối MySQL pool + hàm init() tạo schema & seed dữ liệu mẫu lần đầu
+│   ├── database.js        # Kết nối MySQL pool + hàm init() tạo schema, seed dữ liệu mẫu lần đầu,
+│   │                       # và các hàm backfillXxxIfEmpty() tự di trú dữ liệu cũ khi thêm bảng mới
 │   └── schema.sql          # DDL đầy đủ các bảng
 ├── models/                 # 1 file / 1 bảng, mỗi hàm = 1 câu query đã tham số hoá (chống SQL injection)
+│   ├── sanitizeContent.js  # Cấu hình sanitize-html dùng chung cho Post.description & Product.description
+│   └── safeUrl.js          # Chặn scheme nguy hiểm (javascript:, data:...) trong link menu/quảng cáo
 ├── routes/admin/           # Toàn bộ route /admin/* (đã có middleware requireAuth ở index.js)
 ├── middleware/
 │   ├── auth.js             # requireAuth, requireRole('superadmin'|'admin'|'editor')
 │   ├── validate.js         # Validate form công khai (liên hệ, đặt hàng)
-│   ├── upload.js           # multer, giới hạn ảnh jpg/png/webp/gif (đã bỏ svg vì rủi ro XSS)
+│   ├── upload.js           # multer + kiểm tra magic-byte thật của file (không chỉ tin đuôi/mimetype
+│   │                       # client gửi lên) + rate-limit riêng cho upload — xem mục 4b
 │   └── asyncHandler.js     # Bọc async route để lỗi tự rơi vào error handler, khỏi try/catch lặp lại
 ├── views/
 │   ├── layout.ejs          # Layout trang công khai — SEO meta, JSON-LD, nạp theme qua data-theme
-│   ├── partials/           # header (nav + nút gọi + FAB mobile), footer, page-header dùng chung
+│   ├── partials/           # header (nav động từ DB + nút gọi + FAB mobile), footer, ad-banners.ejs
+│   │                       # (quảng cáo dọc 2 bên), page-header dùng chung
 │   ├── pages/              # 1 file / 1 trang công khai
 │   └── admin/              # Toàn bộ giao diện quản trị (layout riêng, không dùng theme công khai)
 ├── public/
 │   ├── css/style.css       # File CSS đã build — PHẢI build lại sau khi sửa src/input.css hoặc *.ejs
-│   ├── js/                 # site.js (menu mobile, popup chọn số gọi), admin.js, post-editor.js (Quill)
+│   ├── js/                 # site.js (menu mobile, popup chọn số gọi), admin.js,
+│   │                       # post-editor.js (Quill, dùng cho Tin tức), product-editor.js (TinyMCE,
+│   │                       # dùng cho mô tả Sản phẩm — xem mục 4c)
 │   ├── images/             # SVG logo + minh hoạ chai nước tự vẽ (không phải ảnh thật)
 │   └── uploads/            # Ảnh admin upload qua CMS — KHÔNG xoá, KHÔNG có trong git (.gitignore)
 ├── src/input.css           # Nguồn Tailwind — sửa ở đây, không sửa trực tiếp public/css/style.css
@@ -91,22 +98,83 @@ Các module chính (đường dẫn dưới `/admin`):
 | Module | Đường dẫn | Ghi chú |
 |---|---|---|
 | Dashboard | `/admin` | Thống kê nhanh: doanh thu, đơn mới, liên hệ chưa đọc |
-| Sản phẩm | `/admin/san-pham` | CRUD, upload ảnh, giá tiền lưu bằng số nguyên (VNĐ) |
+| Sản phẩm | `/admin/san-pham` | CRUD, upload ảnh, giá tiền lưu bằng số nguyên (VNĐ), mô tả chi tiết dùng **TinyMCE** (xem mục 4c) |
 | Tin tức | `/admin/tin-tuc` | Trình soạn thảo Quill, nội dung được **sanitize-html** trước khi lưu (chống XSS lưu trữ) |
+| Danh mục | `/admin/danh-muc` | Danh mục dùng chung cho Sản phẩm & Tin tức (tab riêng theo `type`), sản phẩm/bài viết vẫn lưu tên danh mục dạng text — đổi tên ở đây không tự cập nhật các bản ghi cũ đã lưu |
+| Menu điều hướng | `/admin/menu` | CRUD các mục trên header trang công khai — xem mục 6b |
+| Quảng cáo 2 bên | `/admin/quang-cao` | Banner dọc cột trái/phải, chỉ admin/superadmin — xem mục 6b |
 | Khu vực giao hàng | `/admin/dai-ly` | Trước đây là "Đại lý", đã đổi ý nghĩa thành khu vực/quận huyện phục vụ |
 | Tuyển dụng | `/admin/tuyen-dung` | CRUD tin tuyển dụng |
 | Đơn hàng | `/admin/don-hang` | Trạng thái: `new → confirmed → shipping → completed` hoặc `cancelled` |
 | Liên hệ | `/admin/lien-he` | Form liên hệ công khai đổ vào đây |
-| Cài đặt | `/admin/cai-dat` | Thông tin công ty, 2 hotline, **chọn giao diện (theme)** — xem mục 6 |
+| Cài đặt | `/admin/cai-dat` | Thông tin công ty, 2 hotline, **banner trang chủ** (mục 6b), **chọn giao diện (theme)** — xem mục 6 |
 | Người dùng | `/admin/nguoi-dung` | Chỉ superadmin |
 
-Bảo mật đã áp dụng (xem `server.js`, `routes/admin/auth.js`):
+Bảo mật đã áp dụng (xem `server.js`, `routes/admin/auth.js`, `middleware/upload.js`):
 - Rate-limit đăng nhập theo IP (15 lần/15 phút) **+** khoá tài khoản 15 phút sau 5 lần sai liên tiếp.
 - Session ID được cấp lại (`regenerate`) khi đăng nhập thành công — chống session fixation.
 - CSP nghiêm ngặt qua `helmet` — **mọi script phải là file ngoài** (`public/js/*.js`), không được
   viết `<script>` inline hay `onclick=` trong `.ejs`, sẽ bị CSP chặn im lặng.
 - CSRF: chặn request POST/PUT/DELETE vào `/admin/*` nếu header Origin/Referer khác domain (kết hợp
   cookie `SameSite=Lax`).
+- **Upload ảnh (mục 4b):** đuôi file + `Content-Type` client gửi lên đều không đáng tin (dễ giả) —
+  `middleware/upload.js` đọc **magic-byte thật** của file sau khi lưu, xoá ngay và từ chối nếu nội
+  dung không khớp định dạng ảnh đã khai; kèm rate-limit riêng (60 lần/15 phút) để tránh 1 tài khoản
+  bị chiếm quyền spam upload làm đầy ổ đĩa.
+- **Link do admin nhập** (menu điều hướng, link quảng cáo, link nút CTA banner) đi qua
+  `models/safeUrl.js` — chỉ chấp nhận đường dẫn nội bộ (`/...`) hoặc `http(s)://`, chặn
+  `javascript:`/`data:` để tránh XSS khi link được render thẳng vào `href="..."`.
+
+### 4b. Upload ảnh — vì sao không chỉ tin đuôi file
+
+`middleware/upload.js` export thêm 2 hàm ngoài `upload` (instance multer):
+- `assertValidImage(file)` — đọc 12 byte đầu của file đã lưu, so với magic number thật của
+  jpg/png/gif/webp; nếm không khớp thì xoá file và `throw`. Gọi hàm này **sau** khi multer lưu file,
+  **trước** khi ghi vào DB.
+- `runUpload(fieldName)` — bọc `upload.single(fieldName)` thành hàm trả Promise, để `await` được
+  ngay trong `try/catch` của route thay vì đặt `upload.single(...)` làm middleware riêng (nếu đặt
+  riêng, lỗi validate sẽ rơi thẳng ra trang lỗi 500 chung thay vì flash message đẹp — đã từng là bug
+  thật, xem lịch sử commit).
+
+Mẫu dùng đúng (xem `routes/admin/products.js`):
+```js
+const { assertValidImage, runUpload, uploadLimiter } = require("../../middleware/upload");
+const uploadImageFile = runUpload("image_file");
+
+router.post("/moi", uploadLimiter, asyncHandler(async (req, res) => {
+  try {
+    await uploadImageFile(req, res);
+    assertValidImage(req.file);
+    // ... lưu DB
+  } catch (err) {
+    req.flash("error", "..." + err.message);
+    res.redirect(back);
+  }
+}));
+```
+
+### 4c. Editor mô tả sản phẩm — TinyMCE (inline mode)
+
+Ô "Mô tả chi tiết" trong `/admin/san-pham` dùng **TinyMCE 6** (self-hosted qua jsdelivr CDN, lõi
+MIT license, không cần API key) ở **chế độ `inline: true`** — soạn thảo trực tiếp trên trang, không
+qua `<iframe>` nội bộ như chế độ mặc định của TinyMCE. Lý do chọn inline: tránh phải nới lỏng CSP
+`script-src` thêm `'unsafe-inline'` (chế độ iframe mặc định của TinyMCE cần điều đó để bootstrap
+vùng soạn thảo, sẽ làm yếu CSP nghiêm ngặt đã cấu hình).
+
+Vài cấu hình KHÔNG hiển nhiên trong `public/js/product-editor.js`, đừng xoá nếu không hiểu tại sao có:
+- `fixed_toolbar_container_target` (không phải `fixed_toolbar_container` — đó là API TinyMCE 5 cũ,
+  không còn tác dụng ở bản 6) — gắn toolbar cố định vào `#description-toolbar-mount` thay vì để nó
+  nổi (floating) theo con trỏ.
+- `toolbar_mode: "wrap"` — nếu bỏ, các nút thừa sẽ gộp vào 1 nút "..." ẩn đi thay vì xuống dòng.
+- `entity_encoding: "raw"` — nếu bỏ, TinyMCE tự mã hoá tiếng Việt có dấu thành HTML entity
+  (`&agrave;`...) khi lưu, phá vỡ tìm kiếm bằng `LIKE` trong DB.
+- `convert_urls: false` — nếu bỏ, TinyMCE tự "tương đối hoá" đường dẫn ảnh vừa upload
+  (`/uploads/x.png` → `../../uploads/x.png`), sai vị trí khi hiển thị ở URL khác.
+
+Nội dung lưu qua `models/sanitizeContent.js` (dùng chung với Tin tức) — cho phép thêm bảng
+(`<table>`), căn chỉnh (`text-align`), màu chữ/nền, và nhúng video **chỉ từ YouTube/Vimeo**
+(`allowedIframeHostnames`, kèm CSP `frame-src` tương ứng trong `server.js` — thiếu 1 trong 2 chỗ
+này thì video sẽ bị chặn câm, không báo lỗi rõ ràng).
 
 ---
 
@@ -155,6 +223,33 @@ Nút "Đặt nước" và giá tiền trước đây dùng thẳng `red-*` của
 (xem 5 file: `header.ejs`, `home.ejs`, `products.ejs`, `product-detail.ejs`, `contact.ejs`) để chúng
 đổi màu theo theme. **Nếu thêm section mới có nút CTA hoặc giá tiền, dùng `accent-600`/`accent-700`,
 đừng dùng `red-*` trực tiếp**, nếu không nó sẽ không đổi theo theme.
+
+---
+
+## 6b. Tuỳ biến giao diện: Banner / Menu / Quảng cáo 2 bên
+
+Ba phần trước đây hardcode trong `.ejs`, giờ chỉnh được hoàn toàn qua `/admin`, không cần sửa code
+hay deploy lại:
+
+| Phần | Quản lý ở | Lưu ở đâu | Render ở |
+|---|---|---|---|
+| Banner trang chủ (hero) | `/admin/cai-dat#banner` | Bảng `settings`, các key `hero_*` | `views/pages/home.ejs` |
+| Menu điều hướng (header) | `/admin/menu` | Bảng `menu_items` | `views/partials/header.ejs`, đọc qua `res.locals.menuItems` (nạp 1 lần cho mọi trang công khai trong `server.js`) |
+| Quảng cáo dọc 2 bên | `/admin/quang-cao` | Bảng `ad_banners` (cột `position`: `left`/`right`) | `views/partials/ad-banners.ejs`, include trong `layout.ejs` |
+
+**Quảng cáo 2 bên** chỉ hiện ở màn hình **≥ 1536px** (`2xl:flex`, ẩn mặc định) — vì container chính
+rộng tối đa 1440px, dưới 1536px không có đủ khoảng trống 2 bên để đặt banner mà không đè lên nội
+dung. Đừng hạ breakpoint này xuống thấp hơn nếu chưa kiểm tra kỹ trên các độ rộng màn hình phổ biến.
+
+**Migrate dữ liệu cũ:** khi thêm 3 phần này, `db/database.js` có thêm 2 hàm chạy ở mỗi lần khởi
+động (`backfillMenuItemsIfEmpty()`, `backfillHeroSettingsIfMissing()`), tự sinh dữ liệu mặc định
+đúng bằng nội dung cũ đang hiển thị — nên deploy xong site **không đổi giao diện**, admin chỉ thấy
+thêm chỗ để sửa. Cùng pattern với `backfillCategoriesIfEmpty()` đã có trước đó. Nếu sau này thêm
+bảng mới tương tự (có dữ liệu cũ cần giữ), nên theo đúng pattern này thay vì bắt admin nhập lại tay.
+
+**An toàn:** `label`/`url` của menu và `link_url` của quảng cáo là text admin tự nhập, render thẳng
+vào `href="..."` — đều đi qua `models/safeUrl.js` (chặn `javascript:`, `data:`...) trước khi lưu.
+Quản lý cả 3 phần này yêu cầu role `admin`/`superadmin` (không cho `editor`), cùng mức với Cài đặt.
 
 ---
 
@@ -214,6 +309,11 @@ thầm, không báo lỗi rõ ràng** — nếu cần thêm hành vi JS, viết 
       thật, chỉ mới làm 2 theme "Tin cậy" và "Năng động").
 - [ ] Cân nhắc thêm test tự động (hiện chưa có test nào, toàn bộ kiểm thử đang làm thủ công qua
       trình duyệt).
+- [ ] Danh mục (`/admin/danh-muc`) hiện chỉ là danh sách gợi ý cho dropdown — sản phẩm/bài viết lưu
+      **tên danh mục dạng text**, không phải khoá ngoại tới bảng `categories`. Đổi tên danh mục sẽ
+      **không** tự cập nhật các sản phẩm/bài viết đã lưu trước đó. Nếu cần tính nhất quán chặt hơn
+      (đổi tên 1 chỗ, cập nhật khắp nơi), cân nhắc migrate sang khoá ngoại `category_id` thật.
+- [ ] Quảng cáo 2 bên hiện chưa đo lượt click/hiển thị (không có analytics riêng cho banner).
 
 ## 9. Repo
 
