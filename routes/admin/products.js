@@ -16,6 +16,14 @@ router.get("/moi", (req, res) => {
   res.render("admin/products/form", { title: "Thêm sản phẩm | BMB Việt Nam CMS", product: null });
 });
 
+router.post("/upload-anh", (req, res) => {
+  upload.single("image")(req, res, (err) => {
+    if (err) return res.status(400).json({ error: err.message });
+    if (!req.file) return res.status(400).json({ error: "Không có ảnh nào được tải lên." });
+    res.json({ url: `/uploads/${req.file.filename}` });
+  });
+});
+
 router.post(
   "/moi",
   upload.single("image_file"),

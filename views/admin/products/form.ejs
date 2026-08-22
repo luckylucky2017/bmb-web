@@ -8,7 +8,7 @@
   <span class="text-slate-700"><%= isEdit ? 'Sửa sản phẩm' : 'Thêm sản phẩm' %></span>
 </div>
 
-<form action="<%= action %>" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 lg:grid-cols-3">
+<form id="product-form" action="<%= action %>" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 gap-6 lg:grid-cols-3">
   <div class="admin-card space-y-5 p-6 lg:col-span-2">
     <div>
       <label class="admin-label">Tên sản phẩm</label>
@@ -40,7 +40,24 @@
     </div>
     <div>
       <label class="admin-label">Mô tả chi tiết</label>
-      <textarea name="description" rows="5" class="admin-input"><%= product ? product.description : '' %></textarea>
+      <input type="hidden" name="description" id="description-input" value="<%= product ? product.description : '' %>" />
+      <div id="description-toolbar" class="rounded-t-lg border border-b-0 border-slate-200 bg-slate-50 px-2 py-1.5">
+        <select class="ql-header">
+          <option value="2"></option>
+          <option value="3"></option>
+          <option selected></option>
+        </select>
+        <button class="ql-bold"></button>
+        <button class="ql-italic"></button>
+        <button class="ql-underline"></button>
+        <button class="ql-link"></button>
+        <button class="ql-list" value="ordered"></button>
+        <button class="ql-list" value="bullet"></button>
+        <button class="ql-image"></button>
+        <button class="ql-clean"></button>
+      </div>
+      <div id="description-editor" class="min-h-[220px] rounded-b-lg border border-slate-200 bg-white"></div>
+      <p class="mt-2 text-xs text-slate-400">Có thể dán (Ctrl+V) hoặc kéo-thả ảnh trực tiếp vào khung soạn thảo.</p>
     </div>
     <div>
       <label class="admin-label">Điểm nổi bật (mỗi dòng một ý)</label>
@@ -73,3 +90,7 @@
     </div>
   </div>
 </form>
+
+<link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
+<script src="/js/product-editor.js"></script>

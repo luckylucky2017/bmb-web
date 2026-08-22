@@ -1,4 +1,5 @@
 const { pool } = require("../db/database");
+const sanitizeContent = require("./sanitizeContent");
 
 function parseRow(row) {
   if (!row) return row;
@@ -73,7 +74,7 @@ const Product = {
         parseInt(data.price, 10) || 0,
         data.image || "/images/products/product-500.svg",
         data.short_description || "",
-        data.description || "",
+        sanitizeContent(data.description),
         highlights,
         data.status || "published",
         data.sort_order || 0
@@ -103,7 +104,7 @@ const Product = {
         parseInt(data.price, 10) || 0,
         data.image,
         data.short_description || "",
-        data.description || "",
+        sanitizeContent(data.description),
         highlights,
         data.status || "published",
         id
