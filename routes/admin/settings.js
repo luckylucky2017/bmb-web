@@ -16,8 +16,11 @@ const ALLOWED_KEYS = [
   "working_hours",
   "tax_code",
   "facebook_url",
-  "zalo_url"
+  "zalo_url",
+  "theme"
 ];
+
+const ALLOWED_THEMES = ["default", "tin-cay", "nang-dong"];
 
 router.get(
   "/",
@@ -37,6 +40,9 @@ router.post(
       if (Object.prototype.hasOwnProperty.call(req.body, key)) {
         data[key] = String(req.body[key] || "").slice(0, 500);
       }
+    }
+    if (data.theme && !ALLOWED_THEMES.includes(data.theme)) {
+      delete data.theme;
     }
     await Setting.setMany(data);
     req.flash("success", "Đã lưu cài đặt.");

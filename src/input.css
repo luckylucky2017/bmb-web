@@ -9,6 +9,81 @@
   body {
     @apply font-sans text-slate-700 antialiased;
   }
+
+  /* ---- Public-site theme tokens ----
+     "brand"/"accent" Tailwind colors resolve through these CSS custom
+     properties, and the font faces do too, so switching [data-theme] on
+     <html> (set from Cài đặt > Giao diện) re-skins the whole public site
+     live, with no rebuild. The admin panel never sets data-theme, so it
+     always renders the default palette below regardless of the public
+     site's chosen theme. */
+  :root {
+    --font-sans: "Be Vietnam Pro";
+    --font-display: "Be Vietnam Pro";
+
+    --c-brand-50: 238 248 255;
+    --c-brand-100: 217 238 254;
+    --c-brand-200: 183 224 253;
+    --c-brand-300: 132 205 251;
+    --c-brand-400: 73 177 246;
+    --c-brand-500: 33 147 232;
+    --c-brand-600: 20 118 199;
+    --c-brand-700: 18 95 162;
+    --c-brand-800: 19 79 133;
+    --c-brand-900: 21 66 110;
+    --c-brand-950: 12 41 71;
+
+    --c-accent-50: 254 242 242;
+    --c-accent-100: 254 226 226;
+    --c-accent-600: 220 38 38;
+    --c-accent-700: 185 28 28;
+  }
+
+  /* Phương án A — "Tin cậy": navy + teal, Plus Jakarta Sans / Inter, amber CTA */
+  [data-theme="tin-cay"] {
+    --font-sans: "Inter";
+    --font-display: "Plus Jakarta Sans";
+
+    --c-brand-50: 238 246 247;
+    --c-brand-100: 215 235 238;
+    --c-brand-200: 176 216 222;
+    --c-brand-300: 126 191 201;
+    --c-brand-400: 74 160 173;
+    --c-brand-500: 44 135 148;
+    --c-brand-600: 29 122 140;
+    --c-brand-700: 23 90 104;
+    --c-brand-800: 18 63 73;
+    --c-brand-900: 15 42 67;
+    --c-brand-950: 10 28 46;
+
+    --c-accent-50: 251 242 231;
+    --c-accent-100: 245 226 200;
+    --c-accent-600: 201 122 43;
+    --c-accent-700: 168 98 31;
+  }
+
+  /* Phương án B — "Năng động": electric blue, Manrope, amber CTA */
+  [data-theme="nang-dong"] {
+    --font-sans: "Manrope";
+    --font-display: "Manrope";
+
+    --c-brand-50: 239 242 255;
+    --c-brand-100: 219 227 255;
+    --c-brand-200: 184 200 255;
+    --c-brand-300: 142 163 255;
+    --c-brand-400: 95 120 255;
+    --c-brand-500: 51 87 255;
+    --c-brand-600: 11 76 255;
+    --c-brand-700: 10 63 214;
+    --c-brand-800: 11 52 173;
+    --c-brand-900: 12 46 138;
+    --c-brand-950: 7 26 82;
+
+    --c-accent-50: 255 248 230;
+    --c-accent-100: 255 237 191;
+    --c-accent-600: 224 142 0;
+    --c-accent-700: 184 115 10;
+  }
 }
 
 @layer components {

@@ -12,18 +12,27 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // brand + accent are driven by CSS custom properties (see
+        // src/input.css) so the public site's palette can switch live
+        // per [data-theme] without a rebuild — set from Cài đặt > Giao diện.
         brand: {
-          50: "#eef8ff",
-          100: "#d9eefe",
-          200: "#b7e0fd",
-          300: "#84cdfb",
-          400: "#49b1f6",
-          500: "#2193e8",
-          600: "#1476c7",
-          700: "#125fa2",
-          800: "#134f85",
-          900: "#15426e",
-          950: "#0c2947"
+          50: "rgb(var(--c-brand-50) / <alpha-value>)",
+          100: "rgb(var(--c-brand-100) / <alpha-value>)",
+          200: "rgb(var(--c-brand-200) / <alpha-value>)",
+          300: "rgb(var(--c-brand-300) / <alpha-value>)",
+          400: "rgb(var(--c-brand-400) / <alpha-value>)",
+          500: "rgb(var(--c-brand-500) / <alpha-value>)",
+          600: "rgb(var(--c-brand-600) / <alpha-value>)",
+          700: "rgb(var(--c-brand-700) / <alpha-value>)",
+          800: "rgb(var(--c-brand-800) / <alpha-value>)",
+          900: "rgb(var(--c-brand-900) / <alpha-value>)",
+          950: "rgb(var(--c-brand-950) / <alpha-value>)"
+        },
+        accent: {
+          50: "rgb(var(--c-accent-50) / <alpha-value>)",
+          100: "rgb(var(--c-accent-100) / <alpha-value>)",
+          600: "rgb(var(--c-accent-600) / <alpha-value>)",
+          700: "rgb(var(--c-accent-700) / <alpha-value>)"
         },
         aqua: {
           400: "#5fd9dd",
@@ -41,8 +50,8 @@ module.exports = {
         }
       },
       fontFamily: {
-        sans: ["'Be Vietnam Pro'", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["'Be Vietnam Pro'", "ui-sans-serif", "system-ui", "sans-serif"]
+        sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
+        display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"]
       },
       boxShadow: {
         card: "0 10px 30px -12px rgba(12, 41, 71, 0.18)",
