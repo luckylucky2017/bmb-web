@@ -77,6 +77,47 @@ async function backfillCategoriesIfEmpty() {
   }
 }
 
+const DEFAULT_MENU_ITEMS = [
+  { label: "Trang chủ", url: "/" },
+  { label: "Giới thiệu", url: "/gioi-thieu" },
+  { label: "Sản phẩm", url: "/san-pham" },
+  { label: "Tin tức", url: "/tin-tuc" },
+  { label: "Dịch vụ", url: "/phat-trien-ben-vung" },
+  { label: "Giao hàng", url: "/dai-ly" },
+  { label: "Tuyển dụng", url: "/tuyen-dung" },
+  { label: "Liên hệ", url: "/lien-he" }
+];
+
+// Existing installs (already running before menu_items existed) get the
+// current hardcoded nav turned into rows automatically, so the header
+// doesn't go blank on deploy — same idea as backfillCategoriesIfEmpty.
+async function backfillMenuItemsIfEmpty() {
+  const [[{ c }]] = await pool.query("SELECT COUNT(*) as c FROM menu_items");
+  if (c > 0) return;
+  for (let i = 0; i < DEFAULT_MENU_ITEMS.length; i++) {
+    const item = DEFAULT_MENU_ITEMS[i];
+    await pool.query("INSERT INTO menu_items (label, url, sort_order) VALUES (?, ?, ?)", [item.label, item.url, i]);
+  }
+}
+
+// Same idea for the homepage hero banner: only fills in values that don't
+// already exist, so it never overwrites something an admin already edited.
+async function backfillHeroSettingsIfMissing() {
+  const defaults = {
+    hero_title: "Nước khoáng Lavie chính hãng giao tận nhà tại Hà Nội",
+    hero_subtitle:
+      "BMB Việt Nam - đại lý cấp 1 của Lavie khu vực Hà Nội. Đặt nước nhanh chóng, giao trong ngày, đổi bình miễn phí cho hộ gia đình và văn phòng.",
+    hero_image: "/images/hero/hero-main.svg",
+    hero_cta_text: "Đặt nước ngay",
+    hero_cta_link: "/san-pham",
+    hero_cta_text_2: "Xem khu vực giao hàng",
+    hero_cta_link_2: "/dai-ly"
+  };
+  for (const [key, value] of Object.entries(defaults)) {
+    await pool.query(`INSERT IGNORE INTO settings (\`key\`, value) VALUES (?, ?)`, [key, value]);
+  }
+}
+
 async function seed() {
   const { products } = require("../data/products");
   const { news } = require("../data/news");
@@ -170,6 +211,8 @@ async function init() {
     await seed();
   }
   await backfillCategoriesIfEmpty();
+  await backfillMenuItemsIfEmpty();
+  await backfillHeroSettingsIfMissing();
 }
 
 module.exports = { pool, init, dbConfig };

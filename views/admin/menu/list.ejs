@@ -1,0 +1,46 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Menu điều hướng</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= items.length %> mục menu trên header trang công khai.</p>
+  </div>
+  <a href="/admin/menu/moi" class="admin-btn-primary">+ Thêm mục menu</a>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Nhãn</th>
+        <th>Đường dẫn</th>
+        <th>Thứ tự</th>
+        <th>Trạng thái</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!items.length) { %>
+        <tr><td colspan="5" class="py-10 text-center text-slate-400">Chưa có mục menu nào.</td></tr>
+      <% } %>
+      <% items.forEach(function(m) { %>
+        <tr>
+          <td class="font-semibold text-slate-900"><%= m.label %></td>
+          <td class="text-slate-500"><%= m.url %><% if (m.open_new_tab) { %> <span class="text-xs text-slate-400">(tab mới)</span><% } %></td>
+          <td class="text-slate-500"><%= m.sort_order %></td>
+          <td>
+            <span class="badge <%= m.status === 'active' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
+              <%= m.status === 'active' ? 'Hiển thị' : 'Đã ẩn' %>
+            </span>
+          </td>
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+              <a href="/admin/menu/<%= m.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+              <form action="/admin/menu/<%= m.id %>/xoa" method="POST" data-confirm="Xoá mục menu này?">
+                <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

@@ -1,6 +1,6 @@
 <!-- Hero -->
 <section class="relative h-[640px] overflow-hidden text-white sm:h-[720px]">
-  <img src="/images/hero/hero-main.svg" alt="Nước khoáng Lavie" class="absolute inset-0 h-full w-full object-cover" />
+  <img src="<%= site.hero_image || '/images/hero/hero-main.svg' %>" alt="<%= site.hero_title || 'Nước khoáng Lavie' %>" class="absolute inset-0 h-full w-full object-cover" />
   <div class="absolute inset-0 bg-gradient-to-b from-brand-950/20 via-brand-950/10 to-brand-950/60"></div>
 
   <!-- side vertical tab -->
@@ -11,14 +11,14 @@
   <div class="relative container-page flex h-full flex-col items-center justify-center text-center">
     <span class="section-eyebrow bg-white/15 text-white backdrop-blur">Đại lý phân phối chính thức Lavie tại Hà Nội</span>
     <h1 class="mt-6 max-w-3xl font-display text-4xl font-extrabold uppercase leading-tight tracking-wide sm:text-5xl lg:text-6xl">
-      Nước khoáng Lavie chính hãng<br class="hidden sm:block" /> giao tận nhà tại Hà Nội
+      <%= site.hero_title || 'Nước khoáng Lavie chính hãng giao tận nhà tại Hà Nội' %>
     </h1>
     <p class="mt-5 max-w-xl text-lg text-white/85">
-      BMB Việt Nam - đại lý cấp 1 của Lavie khu vực Hà Nội. Đặt nước nhanh chóng, giao trong ngày, đổi bình miễn phí cho hộ gia đình và văn phòng.
+      <%= site.hero_subtitle || 'BMB Việt Nam - đại lý cấp 1 của Lavie khu vực Hà Nội. Đặt nước nhanh chóng, giao trong ngày, đổi bình miễn phí cho hộ gia đình và văn phòng.' %>
     </p>
     <div class="mt-9 flex flex-wrap justify-center gap-4">
-      <a href="/san-pham" class="btn-primary">Đặt nước ngay</a>
-      <a href="/dai-ly" class="btn-outline">Xem khu vực giao hàng</a>
+      <a href="<%= site.hero_cta_link || '/san-pham' %>" class="btn-primary"><%= site.hero_cta_text || 'Đặt nước ngay' %></a>
+      <a href="<%= site.hero_cta_link_2 || '/dai-ly' %>" class="btn-outline"><%= site.hero_cta_text_2 || 'Xem khu vực giao hàng' %></a>
     </div>
   </div>
 

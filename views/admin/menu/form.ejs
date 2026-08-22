@@ -1,0 +1,39 @@
+<%
+  const isEdit = !!item;
+  const action = isEdit ? `/admin/menu/${item.id}/sua` : '/admin/menu/moi';
+%>
+<div class="mb-6 flex items-center gap-3 text-sm text-slate-500">
+  <a href="/admin/menu" class="hover:text-brand-600">Menu điều hướng</a>
+  <span>/</span>
+  <span class="text-slate-700"><%= isEdit ? 'Sửa mục menu' : 'Thêm mục menu' %></span>
+</div>
+
+<form id="menu-form" action="<%= action %>" method="POST" class="max-w-xl">
+  <div class="admin-card space-y-5 p-6">
+    <div>
+      <label class="admin-label">Nhãn hiển thị</label>
+      <input type="text" name="label" required value="<%= item ? item.label : '' %>" class="admin-input" placeholder="Sản phẩm" />
+    </div>
+    <div>
+      <label class="admin-label">Đường dẫn</label>
+      <input type="text" name="url" required value="<%= item ? item.url : '' %>" class="admin-input" placeholder="/san-pham hoặc https://..." />
+      <p class="mt-1 text-xs text-slate-400">Đường dẫn nội bộ bắt đầu bằng "/" (vd: /san-pham) hoặc URL đầy đủ http(s)://.</p>
+    </div>
+    <div class="flex items-center gap-2">
+      <input type="checkbox" id="open_new_tab" name="open_new_tab" value="1" <%= item && item.open_new_tab ? 'checked' : '' %> class="h-4 w-4 rounded border-slate-300" />
+      <label for="open_new_tab" class="text-sm text-slate-600">Mở ở tab mới</label>
+    </div>
+    <div>
+      <label class="admin-label">Trạng thái</label>
+      <select name="status" class="admin-input">
+        <option value="active" <%= !item || item.status === 'active' ? 'selected' : '' %>>Hiển thị</option>
+        <option value="hidden" <%= item && item.status === 'hidden' ? 'selected' : '' %>>Ẩn</option>
+      </select>
+    </div>
+    <div>
+      <label class="admin-label">Thứ tự hiển thị</label>
+      <input type="number" name="sort_order" value="<%= item ? item.sort_order : 0 %>" class="admin-input" />
+    </div>
+    <button type="submit" class="admin-btn-primary w-full">💾 <%= isEdit ? 'Lưu thay đổi' : 'Tạo mục menu' %></button>
+  </div>
+</form>

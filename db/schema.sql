@@ -52,6 +52,27 @@ CREATE TABLE IF NOT EXISTS categories (
   UNIQUE KEY uniq_type_slug (type, slug)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE IF NOT EXISTS menu_items (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  label VARCHAR(100) NOT NULL,
+  url VARCHAR(255) NOT NULL,
+  open_new_tab TINYINT(1) NOT NULL DEFAULT 0,
+  status VARCHAR(16) NOT NULL DEFAULT 'active', -- 'active' | 'hidden'
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS ad_banners (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  position VARCHAR(16) NOT NULL, -- 'left' | 'right'
+  image VARCHAR(255) NOT NULL,
+  link_url VARCHAR(255),
+  alt_text VARCHAR(191),
+  status VARCHAR(16) NOT NULL DEFAULT 'active', -- 'active' | 'hidden'
+  sort_order INT NOT NULL DEFAULT 0,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS distributors (
   id INT AUTO_INCREMENT PRIMARY KEY,
   region VARCHAR(191) NOT NULL,

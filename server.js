@@ -21,6 +21,8 @@ const Job = require("./models/Job");
 const Order = require("./models/Order");
 const ContactMessage = require("./models/ContactMessage");
 const Setting = require("./models/Setting");
+const MenuItem = require("./models/MenuItem");
+const AdBanner = require("./models/AdBanner");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -153,6 +155,9 @@ app.use(
     res.locals.site = settings;
     res.locals.siteName = settings.site_name || "BMB Việt Nam";
     res.locals.siteUrl = SITE_URL;
+    res.locals.menuItems = await MenuItem.all({ status: "active" });
+    res.locals.adBannersLeft = await AdBanner.all({ position: "left", status: "active" });
+    res.locals.adBannersRight = await AdBanner.all({ position: "right", status: "active" });
     next();
   })
 );

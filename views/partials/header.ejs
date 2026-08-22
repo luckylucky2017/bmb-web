@@ -1,14 +1,5 @@
 <%
-  const navItems = [
-    { href: "/", label: "Trang chủ" },
-    { href: "/gioi-thieu", label: "Giới thiệu" },
-    { href: "/san-pham", label: "Sản phẩm" },
-    { href: "/tin-tuc", label: "Tin tức" },
-    { href: "/phat-trien-ben-vung", label: "Dịch vụ" },
-    { href: "/dai-ly", label: "Giao hàng" },
-    { href: "/tuyen-dung", label: "Tuyển dụng" },
-    { href: "/lien-he", label: "Liên hệ" }
-  ];
+  const navItems = (menuItems || []).map((m) => ({ href: m.url, label: m.label, newTab: !!m.open_new_tab }));
 %>
 <header class="sticky top-0 z-50 border-b border-slate-100 bg-white shadow-sm">
   <div class="mx-auto flex h-20 max-w-[1440px] items-center justify-between gap-3 px-5 sm:px-8 lg:px-10">
@@ -18,7 +9,7 @@
 
     <nav class="hidden items-center gap-3 xl:flex xl:gap-4">
       <% navItems.forEach(function(item) { %>
-        <a href="<%= item.href %>" class="relative whitespace-nowrap py-1 text-[13px] font-bold uppercase tracking-wide <%= currentPath === item.href ? 'text-brand-600' : 'text-brand-950 hover:text-brand-600' %>">
+        <a href="<%= item.href %>" <%= item.newTab ? 'target="_blank" rel="noopener"' : '' %> class="relative whitespace-nowrap py-1 text-[13px] font-bold uppercase tracking-wide <%= currentPath === item.href ? 'text-brand-600' : 'text-brand-950 hover:text-brand-600' %>">
           <%= item.label %>
           <% if (currentPath === item.href) { %>
             <span class="absolute -bottom-1 left-0 h-0.5 w-full rounded-full bg-brand-600"></span>
@@ -63,7 +54,7 @@
   <div id="mobile-menu" class="hidden border-t border-slate-100 bg-white xl:hidden">
     <nav class="container-page flex flex-col gap-1 py-4">
       <% navItems.forEach(function(item) { %>
-        <a href="<%= item.href %>" class="rounded-lg px-3 py-2.5 text-sm font-bold uppercase <%= currentPath === item.href ? 'bg-brand-50 text-brand-700' : 'text-brand-950' %>">
+        <a href="<%= item.href %>" <%= item.newTab ? 'target="_blank" rel="noopener"' : '' %> class="rounded-lg px-3 py-2.5 text-sm font-bold uppercase <%= currentPath === item.href ? 'bg-brand-50 text-brand-700' : 'text-brand-950' %>">
           <%= item.label %>
         </a>
       <% }); %>

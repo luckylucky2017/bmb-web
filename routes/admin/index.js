@@ -22,6 +22,8 @@ router.use("/", require("./dashboard"));
 router.use("/san-pham", require("./products"));
 router.use("/tin-tuc", require("./posts"));
 router.use("/danh-muc", require("./categories"));
+router.use("/menu", require("./menu"));
+router.use("/quang-cao", require("./ad-banners"));
 router.use("/dai-ly", require("./distributors"));
 router.use("/tuyen-dung", require("./jobs"));
 router.use("/don-hang", require("./orders"));

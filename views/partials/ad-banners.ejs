@@ -1,0 +1,25 @@
+<!-- Vertical side ad banners, e-commerce style. Only shown on very wide
+     screens (2xl = 1536px+) where there's real empty space beside the
+     1440px-wide container — never overlaps the main content. -->
+<% if (adBannersLeft && adBannersLeft.length) { %>
+  <div class="pointer-events-none fixed inset-y-0 left-0 z-30 hidden w-40 items-center justify-center 2xl:flex">
+    <div class="flex flex-col gap-4">
+      <% adBannersLeft.forEach(function(b) { %>
+        <a href="<%= b.link_url || '#' %>" <%= (b.link_url || '').startsWith('http') ? 'target="_blank" rel="noopener"' : '' %> class="pointer-events-auto block overflow-hidden rounded-xl shadow-card transition hover:opacity-90">
+          <img src="<%= b.image %>" alt="<%= b.alt_text || '' %>" class="w-40" />
+        </a>
+      <% }); %>
+    </div>
+  </div>
+<% } %>
+<% if (adBannersRight && adBannersRight.length) { %>
+  <div class="pointer-events-none fixed inset-y-0 right-0 z-30 hidden w-40 items-center justify-center 2xl:flex">
+    <div class="flex flex-col gap-4">
+      <% adBannersRight.forEach(function(b) { %>
+        <a href="<%= b.link_url || '#' %>" <%= (b.link_url || '').startsWith('http') ? 'target="_blank" rel="noopener"' : '' %> class="pointer-events-auto block overflow-hidden rounded-xl shadow-card transition hover:opacity-90">
+          <img src="<%= b.image %>" alt="<%= b.alt_text || '' %>" class="w-40" />
+        </a>
+      <% }); %>
+    </div>
+  </div>
+<% } %>

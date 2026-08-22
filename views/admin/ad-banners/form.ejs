@@ -1,0 +1,50 @@
+<%
+  const isEdit = !!banner;
+  const action = isEdit ? `/admin/quang-cao/${banner.id}/sua` : '/admin/quang-cao/moi';
+%>
+<div class="mb-6 flex items-center gap-3 text-sm text-slate-500">
+  <a href="/admin/quang-cao?position=<%= position %>" class="hover:text-brand-600">Quảng cáo 2 bên</a>
+  <span>/</span>
+  <span class="text-slate-700"><%= isEdit ? 'Sửa banner' : 'Thêm banner' %></span>
+</div>
+
+<form id="ad-banner-form" action="<%= action %>" method="POST" enctype="multipart/form-data" class="max-w-xl">
+  <div class="admin-card space-y-5 p-6">
+    <div>
+      <label class="admin-label">Vị trí</label>
+      <select name="position" class="admin-input">
+        <option value="left" <%= position === 'left' ? 'selected' : '' %>>Cột trái</option>
+        <option value="right" <%= position === 'right' ? 'selected' : '' %>>Cột phải</option>
+      </select>
+    </div>
+    <div>
+      <label class="admin-label">Ảnh banner (khuyến nghị tỉ lệ dọc, vd 300x600px)</label>
+      <% if (banner && banner.image) { %>
+        <div class="mb-3 flex aspect-[1/2] max-w-[160px] items-center justify-center overflow-hidden rounded-lg bg-slate-50">
+          <img src="<%= banner.image %>" alt="" class="h-full w-full object-cover" />
+        </div>
+      <% } %>
+      <input type="file" name="image_file" accept="image/*" class="admin-input" <%= isEdit ? '' : 'required' %> />
+    </div>
+    <div>
+      <label class="admin-label">Liên kết khi bấm vào (không bắt buộc)</label>
+      <input type="text" name="link_url" value="<%= banner ? banner.link_url : '' %>" class="admin-input" placeholder="/san-pham hoặc https://..." />
+    </div>
+    <div>
+      <label class="admin-label">Mô tả ảnh (alt text)</label>
+      <input type="text" name="alt_text" value="<%= banner ? banner.alt_text : '' %>" class="admin-input" placeholder="Khuyến mãi tháng 8" />
+    </div>
+    <div>
+      <label class="admin-label">Trạng thái</label>
+      <select name="status" class="admin-input">
+        <option value="active" <%= !banner || banner.status === 'active' ? 'selected' : '' %>>Hiển thị</option>
+        <option value="hidden" <%= banner && banner.status === 'hidden' ? 'selected' : '' %>>Ẩn</option>
+      </select>
+    </div>
+    <div>
+      <label class="admin-label">Thứ tự hiển thị</label>
+      <input type="number" name="sort_order" value="<%= banner ? banner.sort_order : 0 %>" class="admin-input" />
+    </div>
+    <button type="submit" class="admin-btn-primary w-full">💾 <%= isEdit ? 'Lưu thay đổi' : 'Tạo banner' %></button>
+  </div>
+</form>

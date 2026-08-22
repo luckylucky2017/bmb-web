@@ -1,0 +1,39 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Quảng cáo 2 bên</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= banners.length %> banner cột <%= position === 'right' ? 'phải' : 'trái' %>. Chỉ hiện trên màn hình rộng, không ảnh hưởng nội dung chính.</p>
+  </div>
+  <a href="/admin/quang-cao/moi?position=<%= position %>" class="admin-btn-primary">+ Thêm banner</a>
+</div>
+
+<div class="mt-6 flex gap-2 border-b border-slate-200">
+  <a href="/admin/quang-cao?position=left" class="border-b-2 px-4 py-2 text-sm font-semibold <%= position === 'left' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-700' %>">Cột trái</a>
+  <a href="/admin/quang-cao?position=right" class="border-b-2 px-4 py-2 text-sm font-semibold <%= position === 'right' ? 'border-brand-600 text-brand-600' : 'border-transparent text-slate-500 hover:text-slate-700' %>">Cột phải</a>
+</div>
+
+<div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+  <% if (!banners.length) { %>
+    <p class="col-span-full py-10 text-center text-slate-400">Chưa có banner nào ở cột <%= position === 'right' ? 'phải' : 'trái' %>.</p>
+  <% } %>
+  <% banners.forEach(function(b) { %>
+    <div class="admin-card overflow-hidden">
+      <div class="flex aspect-[3/4] items-center justify-center bg-slate-50">
+        <img src="<%= b.image %>" alt="<%= b.alt_text %>" class="h-full w-full object-cover" />
+      </div>
+      <div class="p-4">
+        <p class="truncate text-xs text-slate-400"><%= b.link_url || 'Không có liên kết' %></p>
+        <div class="mt-2 flex items-center justify-between">
+          <span class="badge <%= b.status === 'active' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
+            <%= b.status === 'active' ? 'Hiển thị' : 'Đã ẩn' %>
+          </span>
+          <div class="flex gap-2">
+            <a href="/admin/quang-cao/<%= b.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+            <form action="/admin/quang-cao/<%= b.id %>/xoa" method="POST" data-confirm="Xoá banner này?">
+              <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% }); %>
+</div>
