@@ -128,6 +128,22 @@
   </span>
 </button>
 
+<% if (site.hotline_2) { %>
+  <!-- Mirrors the bottom-left hotline pill so the 2nd number is just as
+       reachable, without going through the picker, from the opposite
+       corner of the screen. -->
+  <a
+    href="tel:<%= site.hotline_2.replace(/\s+/g, '') %>"
+    class="fixed right-5 top-24 z-40 hidden items-center gap-2 rounded-full bg-red-600 px-4 py-2.5 text-white shadow-card transition hover:bg-red-700 sm:flex"
+  >
+    <span>📞</span>
+    <span class="leading-tight text-left">
+      <span class="block text-[10px] font-semibold uppercase text-red-100">Call / Zalo đặt hàng</span>
+      <span class="block text-sm font-extrabold"><%= site.hotline_2 %></span>
+    </span>
+  </a>
+<% } %>
+
 <!-- Call picker: opened by any .js-call-trigger when 2 hotlines are configured -->
 <div id="call-picker" class="fixed inset-0 z-[60] hidden items-center justify-center bg-slate-900/60 px-4" role="dialog" aria-modal="true" aria-labelledby="call-picker-title">
   <div class="w-full max-w-xs rounded-2xl bg-white p-5 shadow-card">
