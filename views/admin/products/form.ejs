@@ -41,7 +41,7 @@
     <div>
       <label class="admin-label">Mô tả chi tiết</label>
       <input type="hidden" name="description" id="description-input" value="<%= product ? product.description : '' %>" />
-      <div id="description-toolbar" class="rounded-t-lg border border-b-0 border-slate-200 bg-slate-50 px-2 py-1.5">
+      <div id="description-toolbar" class="overflow-x-auto whitespace-nowrap rounded-t-lg border border-b-0 border-slate-200 bg-slate-50 px-2 py-1.5">
         <select class="ql-header">
           <option value="2"></option>
           <option value="3"></option>
@@ -50,14 +50,21 @@
         <button class="ql-bold"></button>
         <button class="ql-italic"></button>
         <button class="ql-underline"></button>
-        <button class="ql-link"></button>
+        <button class="ql-strike"></button>
+        <select class="ql-color"></select>
+        <select class="ql-background"></select>
+        <select class="ql-align"></select>
         <button class="ql-list" value="ordered"></button>
         <button class="ql-list" value="bullet"></button>
+        <button class="ql-blockquote"></button>
+        <button class="ql-code-block"></button>
+        <button class="ql-link"></button>
         <button class="ql-image"></button>
+        <button class="ql-video"></button>
         <button class="ql-clean"></button>
       </div>
       <div id="description-editor" class="min-h-[220px] rounded-b-lg border border-slate-200 bg-white"></div>
-      <p class="mt-2 text-xs text-slate-400">Có thể dán (Ctrl+V) hoặc kéo-thả ảnh trực tiếp vào khung soạn thảo.</p>
+      <p class="mt-2 text-xs text-slate-400">Có thể dán (Ctrl+V) hoặc kéo-thả ảnh trực tiếp vào khung soạn thảo. Nút 🎬 để nhúng video YouTube/Vimeo qua đường link.</p>
     </div>
     <div>
       <label class="admin-label">Điểm nổi bật (mỗi dòng một ý)</label>
