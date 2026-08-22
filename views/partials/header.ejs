@@ -80,17 +80,31 @@
   </div>
 </header>
 
-<!-- Floating sticky contact widgets: a single, unobtrusive call button
-     on mobile (Zalo/Facebook stay reachable via the footer and contact
-     page instead of stacking more circles over scrolling content), the
-     fuller icon stack + hotline pill from sm: up where there's room. -->
-<button
-  type="button"
-  class="js-call-trigger fixed bottom-5 right-5 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-red-600 text-xl text-white shadow-card sm:hidden"
-  aria-label="Gọi hotline đặt hàng"
-  data-tel="<%= (site.hotline || '').replace(/\s+/g, '') %>"
-  data-tel2="<%= (site.hotline_2 || '').replace(/\s+/g, '') %>"
->📞</button>
+<!-- Floating sticky contact widgets: a full-width bottom bar with all 3
+     actions on mobile (fixed height, so it only ever covers a thin,
+     predictable strip instead of a tall stack of circles drifting over
+     content), the fuller icon stack + hotline pill from sm: up where
+     there's room to float them without covering anything important. -->
+<div class="fixed inset-x-0 bottom-0 z-40 flex items-stretch border-t border-slate-200 bg-white shadow-card sm:hidden">
+  <button
+    type="button"
+    class="js-call-trigger flex flex-1 flex-col items-center justify-center gap-0.5 py-2 text-red-600 active:bg-slate-50"
+    aria-label="Gọi hotline đặt hàng"
+    data-tel="<%= (site.hotline || '').replace(/\s+/g, '') %>"
+    data-tel2="<%= (site.hotline_2 || '').replace(/\s+/g, '') %>"
+  >
+    <span class="text-lg leading-none">📞</span>
+    <span class="text-[10px] font-semibold leading-none">Gọi ngay</span>
+  </button>
+  <a href="<%= site.zalo_url || '#' %>" target="_blank" rel="noopener" class="flex flex-1 flex-col items-center justify-center gap-0.5 border-l border-slate-100 py-2 text-blue-600 active:bg-slate-50">
+    <span class="flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 text-[9px] font-black leading-none text-white">Za</span>
+    <span class="text-[10px] font-semibold leading-none">Zalo</span>
+  </a>
+  <a href="<%= site.facebook_url || '#' %>" target="_blank" rel="noopener" class="flex flex-1 flex-col items-center justify-center gap-0.5 border-l border-slate-100 py-2 text-brand-600 active:bg-slate-50">
+    <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.23 10.44 22v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22C18.34 21.23 22 17.08 22 12.06Z"/></svg>
+    <span class="text-[10px] font-semibold leading-none">Facebook</span>
+  </a>
+</div>
 
 <div class="fixed bottom-24 right-5 z-40 hidden flex-col gap-3 sm:flex">
   <a href="<%= site.facebook_url || '#' %>" target="_blank" rel="noopener" aria-label="Facebook" class="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-card ring-1 ring-slate-100 transition hover:scale-105">
