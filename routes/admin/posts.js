@@ -3,6 +3,8 @@ const router = express.Router();
 const Post = require("../../models/Post");
 const Category = require("../../models/Category");
 const upload = require("../../middleware/upload");
+const { assertValidImage, runUpload, uploadLimiter } = upload;
+const uploadImageFile = runUpload("image_file");
 const asyncHandler = require("../../middleware/asyncHandler");
 
 router.get(
@@ -23,9 +25,11 @@ router.get(
 
 router.post(
   "/moi",
-  upload.single("image_file"),
+  uploadLimiter,
   asyncHandler(async (req, res) => {
     try {
+      await uploadImageFile(req, res);
+      assertValidImage(req.file);
       const image = req.file ? `/uploads/${req.file.filename}` : req.body.image || "/images/news/news-1.svg";
       await Post.create({ ...req.body, image }, req.currentUser.id);
       req.flash("success", "Đã đăng bài viết mới.");
@@ -49,9 +53,11 @@ router.get(
 
 router.post(
   "/:id/sua",
-  upload.single("image_file"),
+  uploadLimiter,
   asyncHandler(async (req, res) => {
     try {
+      await uploadImageFile(req, res);
+      assertValidImage(req.file);
       const existing = await Post.findById(req.params.id);
       const image = req.file ? `/uploads/${req.file.filename}` : req.body.image || existing.image;
       await Post.update(req.params.id, { ...req.body, image });

@@ -1,6 +1,18 @@
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
+const rateLimit = require("express-rate-limit");
+
+// Uploads are authenticated-only, but a compromised/malicious editor
+// session could otherwise script unlimited 5MB uploads to fill disk —
+// this caps that without affecting normal single-image form submits.
+const uploadLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Bạn tải ảnh lên quá nhiều lần. Vui lòng thử lại sau ít phút."
+});
 
 const UPLOAD_DIR = path.join(__dirname, "..", "public", "uploads");
 if (!fs.existsSync(UPLOAD_DIR)) fs.mkdirSync(UPLOAD_DIR, { recursive: true });
@@ -36,4 +48,68 @@ const upload = multer({
   }
 });
 
+// The extension and Content-Type checked above are both entirely
+// client-supplied and trivially spoofed (rename any file to .png, set the
+// form field's mimetype to image/png). This checks the real file bytes
+// against each format's magic number so a disguised non-image can never be
+// stored and served back from our own domain.
+const MAGIC_SIGNATURES = [
+  { ext: [".jpg", ".jpeg"], bytes: [0xff, 0xd8, 0xff] },
+  { ext: [".png"], bytes: [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a] },
+  { ext: [".gif"], bytes: [0x47, 0x49, 0x46, 0x38] } // "GIF8", covers 87a/89a
+];
+
+function isValidWebp(buffer) {
+  // RIFF <4-byte size> WEBP
+  return (
+    buffer.length >= 12 &&
+    buffer.toString("ascii", 0, 4) === "RIFF" &&
+    buffer.toString("ascii", 8, 12) === "WEBP"
+  );
+}
+
+function matchesSignature(buffer, ext) {
+  if (ext === ".webp") return isValidWebp(buffer);
+  const sig = MAGIC_SIGNATURES.find((s) => s.ext.includes(ext));
+  if (!sig) return false;
+  return sig.bytes.every((byte, i) => buffer[i] === byte);
+}
+
+// Throws if `file` (a multer file object) isn't really the image type its
+// extension claims, deleting the bad upload from disk first. No-ops when
+// `file` is undefined (route kept the previously-saved image, nothing new
+// to check).
+function assertValidImage(file) {
+  if (!file) return;
+  const ext = path.extname(file.filename).toLowerCase();
+  let buffer = Buffer.alloc(0);
+  try {
+    const fd = fs.openSync(file.path, "r");
+    buffer = Buffer.alloc(12);
+    fs.readSync(fd, buffer, 0, 12, 0);
+    fs.closeSync(fd);
+  } catch {
+    // fall through with an empty buffer — treated as invalid below
+  }
+  if (!matchesSignature(buffer, ext)) {
+    fs.unlink(file.path, () => {});
+    throw new Error("File tải lên không phải ảnh hợp lệ.");
+  }
+}
+
+// Promisified single-file upload so routes can `await` it inside their own
+// try/catch alongside the rest of their logic (multer errors thrown by a
+// plain middleware before the handler otherwise bypass that try/catch and
+// fall through to the generic 500 page instead of the normal flash message).
+function runUpload(fieldName) {
+  const mw = upload.single(fieldName);
+  return (req, res) =>
+    new Promise((resolve, reject) => {
+      mw(req, res, (err) => (err ? reject(err) : resolve()));
+    });
+}
+
 module.exports = upload;
+module.exports.assertValidImage = assertValidImage;
+module.exports.runUpload = runUpload;
+module.exports.uploadLimiter = uploadLimiter;

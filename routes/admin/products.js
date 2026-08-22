@@ -3,6 +3,8 @@ const router = express.Router();
 const Product = require("../../models/Product");
 const Category = require("../../models/Category");
 const upload = require("../../middleware/upload");
+const { assertValidImage, runUpload, uploadLimiter } = upload;
+const uploadImageFile = runUpload("image_file");
 const asyncHandler = require("../../middleware/asyncHandler");
 
 router.get(
@@ -21,19 +23,26 @@ router.get(
   })
 );
 
-router.post("/upload-anh", (req, res) => {
+router.post("/upload-anh", uploadLimiter, (req, res) => {
   upload.single("image")(req, res, (err) => {
     if (err) return res.status(400).json({ error: err.message });
     if (!req.file) return res.status(400).json({ error: "Không có ảnh nào được tải lên." });
+    try {
+      assertValidImage(req.file);
+    } catch (e) {
+      return res.status(400).json({ error: e.message });
+    }
     res.json({ url: `/uploads/${req.file.filename}` });
   });
 });
 
 router.post(
   "/moi",
-  upload.single("image_file"),
+  uploadLimiter,
   asyncHandler(async (req, res) => {
     try {
+      await uploadImageFile(req, res);
+      assertValidImage(req.file);
       const image = req.file ? `/uploads/${req.file.filename}` : req.body.image || "/images/products/product-500.svg";
       await Product.create({ ...req.body, image });
       req.flash("success", "Đã thêm sản phẩm mới thành công.");
@@ -57,9 +66,11 @@ router.get(
 
 router.post(
   "/:id/sua",
-  upload.single("image_file"),
+  uploadLimiter,
   asyncHandler(async (req, res) => {
     try {
+      await uploadImageFile(req, res);
+      assertValidImage(req.file);
       const existing = await Product.findById(req.params.id);
       const image = req.file ? `/uploads/${req.file.filename}` : req.body.image || existing.image;
       await Product.update(req.params.id, { ...req.body, image });
