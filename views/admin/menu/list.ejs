@@ -6,41 +6,29 @@
   <a href="/admin/menu/moi" class="admin-btn-primary">+ Thêm mục menu</a>
 </div>
 
-<div class="admin-card mt-6 overflow-x-auto">
-  <table class="admin-table">
-    <thead>
-      <tr>
-        <th>Nhãn</th>
-        <th>Đường dẫn</th>
-        <th>Thứ tự</th>
-        <th>Trạng thái</th>
-        <th class="text-right">Thao tác</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% if (!items.length) { %>
-        <tr><td colspan="5" class="py-10 text-center text-slate-400">Chưa có mục menu nào.</td></tr>
-      <% } %>
-      <% items.forEach(function(m) { %>
-        <tr>
-          <td class="font-semibold text-slate-900"><%= m.label %></td>
-          <td class="text-slate-500"><%= m.url %><% if (m.open_new_tab) { %> <span class="text-xs text-slate-400">(tab mới)</span><% } %></td>
-          <td class="text-slate-500"><%= m.sort_order %></td>
-          <td>
-            <span class="badge <%= m.status === 'active' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
-              <%= m.status === 'active' ? 'Hiển thị' : 'Đã ẩn' %>
-            </span>
-          </td>
-          <td class="text-right">
-            <div class="flex justify-end gap-2">
-              <a href="/admin/menu/<%= m.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
-              <form action="/admin/menu/<%= m.id %>/xoa" method="POST" data-confirm="Xoá mục menu này?">
-                <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
-              </form>
-            </div>
-          </td>
-        </tr>
-      <% }); %>
-    </tbody>
-  </table>
+<div class="admin-card mt-6 divide-y divide-slate-100">
+  <% if (!items.length) { %>
+    <p class="py-10 text-center text-slate-400">Chưa có mục menu nào.</p>
+  <% } %>
+  <% items.forEach(function(m) { %>
+    <div class="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="min-w-0">
+        <div class="flex flex-wrap items-center gap-2">
+          <p class="font-semibold text-slate-900"><%= m.label %></p>
+          <span class="badge <%= m.status === 'active' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
+            <%= m.status === 'active' ? 'Hiển thị' : 'Đã ẩn' %>
+          </span>
+        </div>
+        <p class="mt-1 truncate text-sm text-slate-500">
+          <%= m.url %><% if (m.open_new_tab) { %> · tab mới<% } %> · thứ tự <%= m.sort_order %>
+        </p>
+      </div>
+      <div class="flex shrink-0 gap-2">
+        <a href="/admin/menu/<%= m.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+        <form action="/admin/menu/<%= m.id %>/xoa" method="POST" data-confirm="Xoá mục menu này?">
+          <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+        </form>
+      </div>
+    </div>
+  <% }); %>
 </div>
