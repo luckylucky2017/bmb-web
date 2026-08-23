@@ -1,10 +1,20 @@
 <div class="mb-6">
   <h1 class="font-display text-xl font-bold text-slate-900">Nội dung trang</h1>
-  <p class="mt-1 text-sm text-slate-500">Sửa tiêu đề và đoạn văn bản trên trang Giới thiệu và Liên hệ. Thông tin công ty (địa chỉ, hotline, email, giờ làm việc) sửa tại <a href="/admin/cai-dat" class="text-brand-600 hover:underline">Cài đặt website</a>.</p>
+  <p class="mt-1 text-sm text-slate-500">Sửa tiêu đề và đoạn văn bản trên các trang tĩnh (Trang chủ, Giới thiệu, Liên hệ, Dịch vụ). Thông tin công ty (địa chỉ, hotline, email, giờ làm việc) sửa tại <a href="/admin/cai-dat" class="text-brand-600 hover:underline">Cài đặt website</a>, ảnh banner trang chủ sửa tại <a href="/admin/cai-dat#banner" class="text-brand-600 hover:underline">đây</a>.</p>
 </div>
 
 <form id="page-content-form" action="/admin/noi-dung-trang" method="POST" class="admin-card mx-auto max-w-3xl space-y-8 p-6">
   <div>
+    <h2 class="font-display text-base font-bold text-slate-900">Trang chủ</h2>
+    <div class="mt-4 space-y-4">
+      <div>
+        <label class="admin-label">Tiêu đề phần "Vì sao chọn BMB Việt Nam"</label>
+        <input type="text" name="home_whyus_title" value="<%= settings.home_whyus_title %>" class="admin-input" />
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-slate-100 pt-6">
     <h2 class="font-display text-base font-bold text-slate-900">Trang Giới thiệu</h2>
     <div class="mt-4 space-y-4">
       <div>
@@ -68,6 +78,45 @@
       <div>
         <label class="admin-label">Mô tả khung gửi yêu cầu</label>
         <textarea name="contact_form_subtitle" rows="2" class="admin-input"><%= settings.contact_form_subtitle %></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-slate-100 pt-6">
+    <h2 class="font-display text-base font-bold text-slate-900">Trang Dịch vụ</h2>
+    <div class="mt-4 space-y-4">
+      <div>
+        <label class="admin-label">Tiêu đề đầu trang</label>
+        <input type="text" name="sustain_page_title" value="<%= settings.sustain_page_title %>" class="admin-input" />
+      </div>
+      <div>
+        <label class="admin-label">Mô tả đầu trang</label>
+        <textarea name="sustain_page_subtitle" rows="2" class="admin-input"><%= settings.sustain_page_subtitle %></textarea>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-3">
+        <div>
+          <label class="admin-label">Thẻ cam kết 1</label>
+          <input type="text" name="sustain_card_1_title" value="<%= settings.sustain_card_1_title %>" class="admin-input mb-2" placeholder="Tiêu đề" />
+          <textarea name="sustain_card_1_desc" rows="3" class="admin-input" placeholder="Mô tả"><%= settings.sustain_card_1_desc %></textarea>
+        </div>
+        <div>
+          <label class="admin-label">Thẻ cam kết 2</label>
+          <input type="text" name="sustain_card_2_title" value="<%= settings.sustain_card_2_title %>" class="admin-input mb-2" placeholder="Tiêu đề" />
+          <textarea name="sustain_card_2_desc" rows="3" class="admin-input" placeholder="Mô tả"><%= settings.sustain_card_2_desc %></textarea>
+        </div>
+        <div>
+          <label class="admin-label">Thẻ cam kết 3</label>
+          <input type="text" name="sustain_card_3_title" value="<%= settings.sustain_card_3_title %>" class="admin-input mb-2" placeholder="Tiêu đề" />
+          <textarea name="sustain_card_3_desc" rows="3" class="admin-input" placeholder="Mô tả"><%= settings.sustain_card_3_desc %></textarea>
+        </div>
+      </div>
+      <div>
+        <label class="admin-label">Tiêu đề khối "Vì cộng đồng"</label>
+        <input type="text" name="sustain_community_title" value="<%= settings.sustain_community_title %>" class="admin-input" />
+      </div>
+      <div>
+        <label class="admin-label">Đoạn văn bản khối "Vì cộng đồng"</label>
+        <textarea name="sustain_community_text" rows="3" class="admin-input"><%= settings.sustain_community_text %></textarea>
       </div>
     </div>
   </div>

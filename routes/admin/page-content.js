@@ -5,6 +5,7 @@ const asyncHandler = require("../../middleware/asyncHandler");
 const { requireRole } = require("../../middleware/auth");
 
 const ALLOWED_KEYS = [
+  "home_whyus_title",
   "about_page_title",
   "about_page_subtitle",
   "about_intro_title",
@@ -18,7 +19,17 @@ const ALLOWED_KEYS = [
   "contact_page_subtitle",
   "contact_section_title",
   "contact_form_title",
-  "contact_form_subtitle"
+  "contact_form_subtitle",
+  "sustain_page_title",
+  "sustain_page_subtitle",
+  "sustain_card_1_title",
+  "sustain_card_1_desc",
+  "sustain_card_2_title",
+  "sustain_card_2_desc",
+  "sustain_card_3_title",
+  "sustain_card_3_desc",
+  "sustain_community_title",
+  "sustain_community_text"
 ];
 
 router.use(requireRole("superadmin", "admin"));

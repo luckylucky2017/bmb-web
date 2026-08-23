@@ -122,6 +122,7 @@ async function backfillHeroSettingsIfMissing() {
 // hardcoded in about.ejs and contact.ejs.
 async function backfillPageContentSettingsIfMissing() {
   const defaults = {
+    home_whyus_title: "Đại lý Lavie uy tín, giao hàng đúng hẹn",
     about_page_title: "Giới thiệu về BMB Việt Nam",
     about_page_subtitle:
       "Đại lý phân phối chính thức nước khoáng Lavie khu vực Hà Nội, đồng hành cùng hàng nghìn gia đình và doanh nghiệp.",
@@ -138,7 +139,20 @@ async function backfillPageContentSettingsIfMissing() {
     contact_page_subtitle: "BMB Việt Nam luôn sẵn sàng lắng nghe và hỗ trợ bạn.",
     contact_section_title: "Kết nối cùng BMB Việt Nam",
     contact_form_title: "Gửi yêu cầu cho chúng tôi",
-    contact_form_subtitle: "Điền thông tin bên dưới, đội ngũ BMB Việt Nam sẽ phản hồi trong vòng 24 giờ."
+    contact_form_subtitle: "Điền thông tin bên dưới, đội ngũ BMB Việt Nam sẽ phản hồi trong vòng 24 giờ.",
+    sustain_page_title: "Cam kết dịch vụ",
+    sustain_page_subtitle: "Hàng chính hãng, giao đúng hẹn và đồng hành bảo vệ môi trường trong từng đơn hàng.",
+    sustain_card_1_title: "Cam kết hàng chính hãng",
+    sustain_card_1_desc:
+      "Toàn bộ sản phẩm Lavie được BMB Việt Nam nhập trực tiếp, có tem đại lý, kiểm tra hạn sử dụng trước khi giao đến khách hàng.",
+    sustain_card_2_title: "Giao hàng đúng hẹn",
+    sustain_card_2_desc:
+      "Đội xe giao hàng riêng, phục vụ nội thành trong 2-4 giờ và ngoại thành trong 24 giờ, hỗ trợ lịch giao định kỳ.",
+    sustain_card_3_title: "Thu hồi vỏ bình",
+    sustain_card_3_desc: "Thu gom và đổi vỏ bình 19L miễn phí ngay khi giao hàng mới, góp phần giảm rác thải nhựa ra môi trường.",
+    sustain_community_title: "Chương trình đổi vỏ bình miễn phí",
+    sustain_community_text:
+      "Từ năm 2020, BMB Việt Nam triển khai chương trình thu hồi vỏ bình Lavie 19L cho toàn bộ khách hàng sử dụng dịch vụ giao nước định kỳ tại Hà Nội, góp phần giảm thiểu rác thải nhựa ra môi trường."
   };
   for (const [key, value] of Object.entries(defaults)) {
     await pool.query(`INSERT IGNORE INTO settings (\`key\`, value) VALUES (?, ?)`, [key, value]);

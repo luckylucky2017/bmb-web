@@ -1,21 +1,21 @@
-<%- include('../partials/page-header', { pageTitle: 'Cam kết dịch vụ', pageSubtitle: 'Hàng chính hãng, giao đúng hẹn và đồng hành bảo vệ môi trường trong từng đơn hàng.', eyebrow: 'Cam kết của BMB Việt Nam' }) %>
+<%- include('../partials/page-header', { pageTitle: site.sustain_page_title || 'Cam kết dịch vụ', pageSubtitle: site.sustain_page_subtitle || 'Hàng chính hãng, giao đúng hẹn và đồng hành bảo vệ môi trường trong từng đơn hàng.', eyebrow: 'Cam kết của BMB Việt Nam' }) %>
 
 <section class="py-20">
   <div class="container-page grid gap-12 lg:grid-cols-3">
     <div class="card p-8">
       <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-2xl">✅</div>
-      <h3 class="mt-5 font-display text-xl font-bold text-slate-900">Cam kết hàng chính hãng</h3>
-      <p class="mt-3 text-sm leading-relaxed text-slate-500">Toàn bộ sản phẩm Lavie được BMB Việt Nam nhập trực tiếp, có tem đại lý, kiểm tra hạn sử dụng trước khi giao đến khách hàng.</p>
+      <h3 class="mt-5 font-display text-xl font-bold text-slate-900"><%= site.sustain_card_1_title || 'Cam kết hàng chính hãng' %></h3>
+      <p class="mt-3 text-sm leading-relaxed text-slate-500"><%= site.sustain_card_1_desc || 'Toàn bộ sản phẩm Lavie được BMB Việt Nam nhập trực tiếp, có tem đại lý, kiểm tra hạn sử dụng trước khi giao đến khách hàng.' %></p>
     </div>
     <div class="card p-8">
       <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-aqua-500/10 text-2xl">🚴</div>
-      <h3 class="mt-5 font-display text-xl font-bold text-slate-900">Giao hàng đúng hẹn</h3>
-      <p class="mt-3 text-sm leading-relaxed text-slate-500">Đội xe giao hàng riêng, phục vụ nội thành trong 2-4 giờ và ngoại thành trong 24 giờ, hỗ trợ lịch giao định kỳ.</p>
+      <h3 class="mt-5 font-display text-xl font-bold text-slate-900"><%= site.sustain_card_2_title || 'Giao hàng đúng hẹn' %></h3>
+      <p class="mt-3 text-sm leading-relaxed text-slate-500"><%= site.sustain_card_2_desc || 'Đội xe giao hàng riêng, phục vụ nội thành trong 2-4 giờ và ngoại thành trong 24 giờ, hỗ trợ lịch giao định kỳ.' %></p>
     </div>
     <div class="card p-8">
       <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-leaf-500/10 text-2xl">♻️</div>
-      <h3 class="mt-5 font-display text-xl font-bold text-slate-900">Thu hồi vỏ bình</h3>
-      <p class="mt-3 text-sm leading-relaxed text-slate-500">Thu gom và đổi vỏ bình 19L miễn phí ngay khi giao hàng mới, góp phần giảm rác thải nhựa ra môi trường.</p>
+      <h3 class="mt-5 font-display text-xl font-bold text-slate-900"><%= site.sustain_card_3_title || 'Thu hồi vỏ bình' %></h3>
+      <p class="mt-3 text-sm leading-relaxed text-slate-500"><%= site.sustain_card_3_desc || 'Thu gom và đổi vỏ bình 19L miễn phí ngay khi giao hàng mới, góp phần giảm rác thải nhựa ra môi trường.' %></p>
     </div>
   </div>
 </section>
@@ -24,9 +24,9 @@
   <div class="container-page grid items-center gap-10 lg:grid-cols-2">
     <div>
       <span class="section-eyebrow bg-white/15 text-white">Vì cộng đồng</span>
-      <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-4xl">Chương trình đổi vỏ bình miễn phí</h2>
+      <h2 class="mt-4 font-display text-3xl font-extrabold leading-tight sm:text-4xl"><%= site.sustain_community_title || 'Chương trình đổi vỏ bình miễn phí' %></h2>
       <p class="mt-4 max-w-lg text-leaf-50/90">
-        Từ năm 2020, BMB Việt Nam triển khai chương trình thu hồi vỏ bình Lavie 19L cho toàn bộ khách hàng sử dụng dịch vụ giao nước định kỳ tại Hà Nội, góp phần giảm thiểu rác thải nhựa ra môi trường.
+        <%= site.sustain_community_text || 'Từ năm 2020, BMB Việt Nam triển khai chương trình thu hồi vỏ bình Lavie 19L cho toàn bộ khách hàng sử dụng dịch vụ giao nước định kỳ tại Hà Nội, góp phần giảm thiểu rác thải nhựa ra môi trường.' %>
       </p>
       <a href="/tin-tuc" class="btn-outline mt-7">Xem tin tức liên quan</a>
     </div>
