@@ -1,10 +1,16 @@
 <div class="mb-6">
   <h1 class="font-display text-xl font-bold text-slate-900">Nội dung trang</h1>
   <p class="mt-1 text-sm text-slate-500">Sửa tiêu đề và đoạn văn bản trên các trang tĩnh (Trang chủ, Giới thiệu, Liên hệ, Dịch vụ). Thông tin công ty (địa chỉ, hotline, email, giờ làm việc) sửa tại <a href="/admin/cai-dat" class="text-brand-600 hover:underline">Cài đặt website</a>, ảnh banner trang chủ sửa tại <a href="/admin/cai-dat#banner" class="text-brand-600 hover:underline">đây</a>.</p>
+  <div class="mt-4 flex flex-wrap gap-2 text-sm">
+    <a href="#home" class="admin-btn-outline !px-3 !py-1.5">Trang chủ</a>
+    <a href="#about" class="admin-btn-outline !px-3 !py-1.5">Giới thiệu</a>
+    <a href="#contact" class="admin-btn-outline !px-3 !py-1.5">Liên hệ</a>
+    <a href="#sustain" class="admin-btn-outline !px-3 !py-1.5">Dịch vụ</a>
+  </div>
 </div>
 
 <form id="page-content-form" action="/admin/noi-dung-trang" method="POST" class="admin-card mx-auto max-w-3xl space-y-8 p-6">
-  <div>
+  <div id="home" class="scroll-mt-24">
     <h2 class="font-display text-base font-bold text-slate-900">Trang chủ</h2>
     <div class="mt-4 space-y-4">
       <div>
@@ -14,7 +20,7 @@
     </div>
   </div>
 
-  <div class="border-t border-slate-100 pt-6">
+  <div id="about" class="scroll-mt-24 border-t border-slate-100 pt-6">
     <h2 class="font-display text-base font-bold text-slate-900">Trang Giới thiệu</h2>
     <div class="mt-4 space-y-4">
       <div>
@@ -56,7 +62,7 @@
     </div>
   </div>
 
-  <div class="border-t border-slate-100 pt-6">
+  <div id="contact" class="scroll-mt-24 border-t border-slate-100 pt-6">
     <h2 class="font-display text-base font-bold text-slate-900">Trang Liên hệ</h2>
     <div class="mt-4 space-y-4">
       <div>
@@ -82,7 +88,7 @@
     </div>
   </div>
 
-  <div class="border-t border-slate-100 pt-6">
+  <div id="sustain" class="scroll-mt-24 border-t border-slate-100 pt-6">
     <h2 class="font-display text-base font-bold text-slate-900">Trang Dịch vụ</h2>
     <div class="mt-4 space-y-4">
       <div>
