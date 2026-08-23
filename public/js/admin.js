@@ -14,4 +14,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!confirm(form.getAttribute("data-confirm"))) e.preventDefault();
     });
   });
+
+  // Menu form: picking a custom page fills the URL field for you.
+  const pagePicker = document.getElementById("page-picker");
+  const urlInput = document.getElementById("url-input");
+  pagePicker?.addEventListener("change", () => {
+    if (pagePicker.value) urlInput.value = pagePicker.value;
+  });
 });

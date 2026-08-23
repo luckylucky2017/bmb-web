@@ -16,6 +16,7 @@ const { validateContact, validateOrder } = require("./middleware/validate");
 
 const Product = require("./models/Product");
 const Post = require("./models/Post");
+const Page = require("./models/Page");
 const Distributor = require("./models/Distributor");
 const Job = require("./models/Job");
 const Order = require("./models/Order");
@@ -172,9 +173,10 @@ app.get("/robots.txt", (req, res) => {
 app.get(
   "/sitemap.xml",
   asyncHandler(async (req, res) => {
-    const [products, posts] = await Promise.all([
+    const [products, posts, pages] = await Promise.all([
       Product.all({ status: "published" }),
-      Post.all({ status: "published" })
+      Post.all({ status: "published" }),
+      Page.all({ status: "published" })
     ]);
     const staticUrls = [
       { loc: "/", priority: "1.0" },
@@ -196,7 +198,12 @@ app.get(
       priority: "0.6",
       lastmod: p.updated_at
     }));
-    const all = [...staticUrls, ...productUrls, ...postUrls];
+    const pageUrls = pages.map((p) => ({
+      loc: `/trang/${p.slug}`,
+      priority: "0.5",
+      lastmod: p.updated_at
+    }));
+    const all = [...staticUrls, ...productUrls, ...postUrls, ...pageUrls];
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${all
@@ -330,6 +337,21 @@ app.get(
       keywords: `${article.category}, nước lavie, đại lý nước hà nội, tin tức nước khoáng`,
       article,
       related
+    });
+  })
+);
+
+app.get(
+  "/trang/:slug",
+  asyncHandler(async (req, res) => {
+    const page = await Page.findBySlug(req.params.slug);
+    if (!page || page.status !== "published") {
+      return res.status(404).render("pages/404", { title: `Không tìm thấy trang | ${res.locals.siteName}` });
+    }
+    res.render("pages/custom-page", {
+      title: `${page.title} | BMB Việt Nam`,
+      description: page.meta_description || "",
+      page
     });
   })
 );

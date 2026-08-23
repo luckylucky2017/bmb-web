@@ -1,0 +1,45 @@
+<div class="flex flex-wrap items-center justify-between gap-4">
+  <div>
+    <h1 class="font-display text-xl font-bold text-slate-900">Trang tuỳ chỉnh</h1>
+    <p class="mt-1 text-sm text-slate-500"><%= pages.length %> trang. Tạo trang mới rồi gắn vào <a href="/admin/menu" class="text-brand-600 hover:underline">Menu điều hướng</a> để hiển thị trên header.</p>
+  </div>
+  <a href="/admin/trang/moi" class="admin-btn-primary">+ Thêm trang</a>
+</div>
+
+<div class="admin-card mt-6 overflow-x-auto">
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>Tiêu đề</th>
+        <th>Đường dẫn</th>
+        <th>Trạng thái</th>
+        <th class="text-right">Thao tác</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (!pages.length) { %>
+        <tr><td colspan="4" class="py-10 text-center text-slate-400">Chưa có trang nào.</td></tr>
+      <% } %>
+      <% pages.forEach(function(p) { %>
+        <tr>
+          <td class="font-semibold text-slate-900"><%= p.title %></td>
+          <td class="text-slate-500">/trang/<%= p.slug %></td>
+          <td>
+            <span class="badge <%= p.status === 'published' ? 'bg-leaf-500/15 text-leaf-700' : 'bg-slate-100 text-slate-600' %>">
+              <%= p.status === 'published' ? 'Đang hiển thị' : 'Nháp (ẩn)' %>
+            </span>
+          </td>
+          <td class="text-right">
+            <div class="flex justify-end gap-2">
+              <a href="/trang/<%= p.slug %>" target="_blank" class="admin-btn-outline !px-3 !py-1.5">Xem</a>
+              <a href="/admin/trang/<%= p.id %>/sua" class="admin-btn-outline !px-3 !py-1.5">Sửa</a>
+              <form action="/admin/trang/<%= p.id %>/xoa" method="POST" data-confirm="Xoá trang này? Mục Menu đang trỏ tới trang này sẽ bị hỏng liên kết.">
+                <button type="submit" class="admin-btn-danger !px-3 !py-1.5">Xoá</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      <% }); %>
+    </tbody>
+  </table>
+</div>

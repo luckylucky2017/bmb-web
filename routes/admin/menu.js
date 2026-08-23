@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const MenuItem = require("../../models/MenuItem");
+const Page = require("../../models/Page");
 const isSafeUrl = require("../../models/safeUrl");
 const asyncHandler = require("../../middleware/asyncHandler");
 const { requireRole } = require("../../middleware/auth");
@@ -15,9 +16,13 @@ router.get(
   })
 );
 
-router.get("/moi", (req, res) => {
-  res.render("admin/menu/form", { title: "Thêm mục menu | BMB Việt Nam CMS", item: null });
-});
+router.get(
+  "/moi",
+  asyncHandler(async (req, res) => {
+    const pages = await Page.all({ status: "published" });
+    res.render("admin/menu/form", { title: "Thêm mục menu | BMB Việt Nam CMS", item: null, pages });
+  })
+);
 
 router.post(
   "/moi",
@@ -37,7 +42,8 @@ router.get(
   asyncHandler(async (req, res) => {
     const item = await MenuItem.findById(req.params.id);
     if (!item) return res.status(404).send("Không tìm thấy mục menu");
-    res.render("admin/menu/form", { title: "Sửa mục menu | BMB Việt Nam CMS", item });
+    const pages = await Page.all({ status: "published" });
+    res.render("admin/menu/form", { title: "Sửa mục menu | BMB Việt Nam CMS", item, pages });
   })
 );
 

@@ -14,9 +14,21 @@
       <label class="admin-label">Nhãn hiển thị</label>
       <input type="text" name="label" required value="<%= item ? item.label : '' %>" class="admin-input" placeholder="Sản phẩm" />
     </div>
+    <% if (pages && pages.length) { %>
+      <div>
+        <label class="admin-label">Chọn nhanh 1 trang tuỳ chỉnh (không bắt buộc)</label>
+        <select id="page-picker" class="admin-input">
+          <option value="">— Tự nhập đường dẫn bên dưới —</option>
+          <% pages.forEach(function(p) { %>
+            <option value="/trang/<%= p.slug %>"><%= p.title %></option>
+          <% }); %>
+        </select>
+        <p class="mt-1 text-xs text-slate-400">Chưa có trang cần dùng? <a href="/admin/trang/moi" class="text-brand-600 hover:underline">Tạo trang mới</a> ở đây.</p>
+      </div>
+    <% } %>
     <div>
       <label class="admin-label">Đường dẫn</label>
-      <input type="text" name="url" required value="<%= item ? item.url : '' %>" class="admin-input" placeholder="/san-pham hoặc https://..." />
+      <input type="text" name="url" id="url-input" required value="<%= item ? item.url : '' %>" class="admin-input" placeholder="/san-pham hoặc https://..." />
       <p class="mt-1 text-xs text-slate-400">Đường dẫn nội bộ bắt đầu bằng "/" (vd: /san-pham) hoặc URL đầy đủ http(s)://.</p>
     </div>
     <div class="flex items-center gap-2">
