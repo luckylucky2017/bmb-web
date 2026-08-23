@@ -7,6 +7,11 @@ const FONT_FAMILY_VALUE = /^[a-zA-Z0-9\s,'"-]+$/;
 const FONT_SIZE_VALUE = /^\d{1,3}(\.\d+)?(px|pt|em|%)$/;
 const TEXT_ALIGN_VALUE = /^(left|center|right|justify)$/;
 const DIMENSION_VALUE = /^\d{1,4}(\.\d+)?(px|%)?$/;
+const FLOAT_VALUE = /^(left|right|none)$/;
+const DISPLAY_VALUE = /^(block|inline-block|inline)$/;
+const VERTICAL_ALIGN_VALUE = /^(top|middle|bottom|baseline)$/;
+const MARGIN_TOKEN = "(auto|0|\\d{1,4}(\\.\\d+)?(px|em|%))";
+const MARGIN_VALUE = new RegExp(`^${MARGIN_TOKEN}(\\s+${MARGIN_TOKEN}){0,3}$`);
 
 const BLOCK_TAGS = ["p", "h1", "h2", "h3", "h4", "li", "blockquote", "td", "th", "table"];
 
@@ -32,7 +37,7 @@ const SANITIZE_OPTIONS = {
     td: ["style", "colspan", "rowspan"],
     th: ["style", "colspan", "rowspan"],
     // Video embeds: only the iframe shape our video embed feature emits.
-    iframe: ["src", "class", "frameborder", "allowfullscreen"]
+    iframe: ["src", "class", "frameborder", "allowfullscreen", "style", "width", "height"]
   },
   allowedStyles: {
     span: {
@@ -43,10 +48,29 @@ const SANITIZE_OPTIONS = {
     },
     img: {
       width: [DIMENSION_VALUE],
-      height: [DIMENSION_VALUE]
+      height: [DIMENSION_VALUE],
+      "max-width": [DIMENSION_VALUE],
+      float: [FLOAT_VALUE],
+      display: [DISPLAY_VALUE],
+      "vertical-align": [VERTICAL_ALIGN_VALUE],
+      margin: [MARGIN_VALUE],
+      "margin-left": [MARGIN_VALUE],
+      "margin-right": [MARGIN_VALUE],
+      "margin-top": [MARGIN_VALUE],
+      "margin-bottom": [MARGIN_VALUE]
     },
     col: {
       width: [DIMENSION_VALUE]
+    },
+    iframe: {
+      float: [FLOAT_VALUE],
+      display: [DISPLAY_VALUE],
+      margin: [MARGIN_VALUE],
+      "margin-left": [MARGIN_VALUE],
+      "margin-right": [MARGIN_VALUE],
+      "margin-top": [MARGIN_VALUE],
+      "margin-bottom": [MARGIN_VALUE],
+      "max-width": [DIMENSION_VALUE]
     },
     ...Object.fromEntries(
       BLOCK_TAGS.map((tag) => [
