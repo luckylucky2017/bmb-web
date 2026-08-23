@@ -1,24 +1,24 @@
-<%- include('../partials/page-header', { pageTitle: 'Giới thiệu về BMB Việt Nam', pageSubtitle: 'Đại lý phân phối chính thức nước khoáng Lavie khu vực Hà Nội, đồng hành cùng hàng nghìn gia đình và doanh nghiệp.', eyebrow: 'Về chúng tôi' }) %>
+<%- include('../partials/page-header', { pageTitle: site.about_page_title || 'Giới thiệu về BMB Việt Nam', pageSubtitle: site.about_page_subtitle || 'Đại lý phân phối chính thức nước khoáng Lavie khu vực Hà Nội, đồng hành cùng hàng nghìn gia đình và doanh nghiệp.', eyebrow: 'Về chúng tôi' }) %>
 
 <section class="py-20">
   <div class="container-page grid gap-12 lg:grid-cols-2 lg:items-center">
     <div>
       <span class="section-eyebrow">Câu chuyện của chúng tôi</span>
-      <h2 class="section-title">Đại lý Lavie đồng hành cùng người Hà Nội</h2>
+      <h2 class="section-title"><%= site.about_intro_title || 'Đại lý Lavie đồng hành cùng người Hà Nội' %></h2>
       <p class="mt-5 text-slate-600 leading-relaxed">
-        Công ty TNHH BMB Việt Nam là đại lý phân phối cấp 1 chính thức của nhãn hàng nước khoáng Lavie tại khu vực Hà Nội. Chúng tôi không sản xuất nước uống, mà tập trung toàn lực vào việc đưa sản phẩm Lavie chính hãng đến tận tay khách hàng một cách nhanh chóng, đúng hẹn và tận tâm nhất.
+        <%= site.about_intro_paragraph_1 || 'Công ty TNHH BMB Việt Nam là đại lý phân phối cấp 1 chính thức của nhãn hàng nước khoáng Lavie tại khu vực Hà Nội. Chúng tôi không sản xuất nước uống, mà tập trung toàn lực vào việc đưa sản phẩm Lavie chính hãng đến tận tay khách hàng một cách nhanh chóng, đúng hẹn và tận tâm nhất.' %>
       </p>
       <p class="mt-4 text-slate-600 leading-relaxed">
-        Với đội xe giao hàng riêng và kho trung chuyển đặt tại Nam Từ Liêm, BMB Việt Nam phục vụ hàng nghìn hộ gia đình, văn phòng, trường học và nhà hàng trên khắp các quận huyện nội và ngoại thành Hà Nội. Mỗi đơn hàng đều được kiểm tra kỹ về hạn sử dụng và tem chính hãng trước khi giao.
+        <%= site.about_intro_paragraph_2 || 'Với đội xe giao hàng riêng và kho trung chuyển đặt tại Nam Từ Liêm, BMB Việt Nam phục vụ hàng nghìn hộ gia đình, văn phòng, trường học và nhà hàng trên khắp các quận huyện nội và ngoại thành Hà Nội. Mỗi đơn hàng đều được kiểm tra kỹ về hạn sử dụng và tem chính hãng trước khi giao.' %>
       </p>
       <div class="mt-8 grid grid-cols-2 gap-6">
         <div>
-          <p class="font-display text-3xl font-extrabold text-brand-700">2015</p>
-          <p class="mt-1 text-sm text-slate-500">Năm trở thành đại lý Lavie</p>
+          <p class="font-display text-3xl font-extrabold text-brand-700"><%= site.about_stat_1_value || '2015' %></p>
+          <p class="mt-1 text-sm text-slate-500"><%= site.about_stat_1_label || 'Năm trở thành đại lý Lavie' %></p>
         </div>
         <div>
-          <p class="font-display text-3xl font-extrabold text-brand-700">50+</p>
-          <p class="mt-1 text-sm text-slate-500">Nhân viên &amp; tài xế giao hàng</p>
+          <p class="font-display text-3xl font-extrabold text-brand-700"><%= site.about_stat_2_value || '50+' %></p>
+          <p class="mt-1 text-sm text-slate-500"><%= site.about_stat_2_label || 'Nhân viên & tài xế giao hàng' %></p>
         </div>
       </div>
     </div>

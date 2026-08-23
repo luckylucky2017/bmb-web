@@ -1,0 +1,76 @@
+<div class="mb-6">
+  <h1 class="font-display text-xl font-bold text-slate-900">Nội dung trang</h1>
+  <p class="mt-1 text-sm text-slate-500">Sửa tiêu đề và đoạn văn bản trên trang Giới thiệu và Liên hệ. Thông tin công ty (địa chỉ, hotline, email, giờ làm việc) sửa tại <a href="/admin/cai-dat" class="text-brand-600 hover:underline">Cài đặt website</a>.</p>
+</div>
+
+<form id="page-content-form" action="/admin/noi-dung-trang" method="POST" class="admin-card mx-auto max-w-3xl space-y-8 p-6">
+  <div>
+    <h2 class="font-display text-base font-bold text-slate-900">Trang Giới thiệu</h2>
+    <div class="mt-4 space-y-4">
+      <div>
+        <label class="admin-label">Tiêu đề đầu trang</label>
+        <input type="text" name="about_page_title" value="<%= settings.about_page_title %>" class="admin-input" />
+      </div>
+      <div>
+        <label class="admin-label">Mô tả đầu trang</label>
+        <textarea name="about_page_subtitle" rows="2" class="admin-input"><%= settings.about_page_subtitle %></textarea>
+      </div>
+      <div>
+        <label class="admin-label">Tiêu đề phần giới thiệu</label>
+        <input type="text" name="about_intro_title" value="<%= settings.about_intro_title %>" class="admin-input" />
+      </div>
+      <div>
+        <label class="admin-label">Đoạn văn bản 1</label>
+        <textarea name="about_intro_paragraph_1" rows="3" class="admin-input"><%= settings.about_intro_paragraph_1 %></textarea>
+      </div>
+      <div>
+        <label class="admin-label">Đoạn văn bản 2</label>
+        <textarea name="about_intro_paragraph_2" rows="3" class="admin-input"><%= settings.about_intro_paragraph_2 %></textarea>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="admin-label">Số liệu 1</label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" name="about_stat_1_value" value="<%= settings.about_stat_1_value %>" class="admin-input" placeholder="2015" />
+            <input type="text" name="about_stat_1_label" value="<%= settings.about_stat_1_label %>" class="admin-input" placeholder="Chú thích" />
+          </div>
+        </div>
+        <div>
+          <label class="admin-label">Số liệu 2</label>
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" name="about_stat_2_value" value="<%= settings.about_stat_2_value %>" class="admin-input" placeholder="50+" />
+            <input type="text" name="about_stat_2_label" value="<%= settings.about_stat_2_label %>" class="admin-input" placeholder="Chú thích" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="border-t border-slate-100 pt-6">
+    <h2 class="font-display text-base font-bold text-slate-900">Trang Liên hệ</h2>
+    <div class="mt-4 space-y-4">
+      <div>
+        <label class="admin-label">Tiêu đề đầu trang</label>
+        <input type="text" name="contact_page_title" value="<%= settings.contact_page_title %>" class="admin-input" />
+      </div>
+      <div>
+        <label class="admin-label">Mô tả đầu trang</label>
+        <textarea name="contact_page_subtitle" rows="2" class="admin-input"><%= settings.contact_page_subtitle %></textarea>
+      </div>
+      <div>
+        <label class="admin-label">Tiêu đề phần thông tin liên hệ</label>
+        <input type="text" name="contact_section_title" value="<%= settings.contact_section_title %>" class="admin-input" />
+      </div>
+      <div>
+        <label class="admin-label">Tiêu đề khung gửi yêu cầu</label>
+        <input type="text" name="contact_form_title" value="<%= settings.contact_form_title %>" class="admin-input" />
+      </div>
+      <div>
+        <label class="admin-label">Mô tả khung gửi yêu cầu</label>
+        <textarea name="contact_form_subtitle" rows="2" class="admin-input"><%= settings.contact_form_subtitle %></textarea>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="admin-btn-primary w-full">💾 Lưu nội dung trang</button>
+</form>

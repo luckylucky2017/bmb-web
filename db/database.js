@@ -118,6 +118,33 @@ async function backfillHeroSettingsIfMissing() {
   }
 }
 
+// Same pattern for the Giới thiệu / Liên hệ page copy that used to be
+// hardcoded in about.ejs and contact.ejs.
+async function backfillPageContentSettingsIfMissing() {
+  const defaults = {
+    about_page_title: "Giới thiệu về BMB Việt Nam",
+    about_page_subtitle:
+      "Đại lý phân phối chính thức nước khoáng Lavie khu vực Hà Nội, đồng hành cùng hàng nghìn gia đình và doanh nghiệp.",
+    about_intro_title: "Đại lý Lavie đồng hành cùng người Hà Nội",
+    about_intro_paragraph_1:
+      "Công ty TNHH BMB Việt Nam là đại lý phân phối cấp 1 chính thức của nhãn hàng nước khoáng Lavie tại khu vực Hà Nội. Chúng tôi không sản xuất nước uống, mà tập trung toàn lực vào việc đưa sản phẩm Lavie chính hãng đến tận tay khách hàng một cách nhanh chóng, đúng hẹn và tận tâm nhất.",
+    about_intro_paragraph_2:
+      "Với đội xe giao hàng riêng và kho trung chuyển đặt tại Nam Từ Liêm, BMB Việt Nam phục vụ hàng nghìn hộ gia đình, văn phòng, trường học và nhà hàng trên khắp các quận huyện nội và ngoại thành Hà Nội. Mỗi đơn hàng đều được kiểm tra kỹ về hạn sử dụng và tem chính hãng trước khi giao.",
+    about_stat_1_value: "2015",
+    about_stat_1_label: "Năm trở thành đại lý Lavie",
+    about_stat_2_value: "50+",
+    about_stat_2_label: "Nhân viên & tài xế giao hàng",
+    contact_page_title: "Liên hệ với chúng tôi",
+    contact_page_subtitle: "BMB Việt Nam luôn sẵn sàng lắng nghe và hỗ trợ bạn.",
+    contact_section_title: "Kết nối cùng BMB Việt Nam",
+    contact_form_title: "Gửi yêu cầu cho chúng tôi",
+    contact_form_subtitle: "Điền thông tin bên dưới, đội ngũ BMB Việt Nam sẽ phản hồi trong vòng 24 giờ."
+  };
+  for (const [key, value] of Object.entries(defaults)) {
+    await pool.query(`INSERT IGNORE INTO settings (\`key\`, value) VALUES (?, ?)`, [key, value]);
+  }
+}
+
 async function seed() {
   const { products } = require("../data/products");
   const { news } = require("../data/news");
@@ -213,6 +240,7 @@ async function init() {
   await backfillCategoriesIfEmpty();
   await backfillMenuItemsIfEmpty();
   await backfillHeroSettingsIfMissing();
+  await backfillPageContentSettingsIfMissing();
 }
 
 module.exports = { pool, init, dbConfig };

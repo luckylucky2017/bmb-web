@@ -1,10 +1,10 @@
-<%- include('../partials/page-header', { pageTitle: 'Liên hệ với chúng tôi', pageSubtitle: 'BMB Việt Nam luôn sẵn sàng lắng nghe và hỗ trợ bạn.', eyebrow: 'Liên hệ' }) %>
+<%- include('../partials/page-header', { pageTitle: site.contact_page_title || 'Liên hệ với chúng tôi', pageSubtitle: site.contact_page_subtitle || 'BMB Việt Nam luôn sẵn sàng lắng nghe và hỗ trợ bạn.', eyebrow: 'Liên hệ' }) %>
 
 <section class="py-20">
   <div class="container-page grid gap-12 lg:grid-cols-2">
     <div>
       <span class="section-eyebrow">Thông tin liên hệ</span>
-      <h2 class="section-title">Kết nối cùng BMB Việt Nam</h2>
+      <h2 class="section-title"><%= site.contact_section_title || 'Kết nối cùng BMB Việt Nam' %></h2>
       <div class="mt-8 space-y-6">
         <div class="flex items-start gap-4">
           <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-xl">📍</span>
@@ -41,8 +41,8 @@
     </div>
 
     <div class="rounded-2xl border border-slate-100 p-8 shadow-soft">
-      <h3 class="font-display text-xl font-bold text-slate-900">Gửi yêu cầu cho chúng tôi</h3>
-      <p class="mt-2 text-sm text-slate-500">Điền thông tin bên dưới, đội ngũ BMB Việt Nam sẽ phản hồi trong vòng 24 giờ.</p>
+      <h3 class="font-display text-xl font-bold text-slate-900"><%= site.contact_form_title || 'Gửi yêu cầu cho chúng tôi' %></h3>
+      <p class="mt-2 text-sm text-slate-500"><%= site.contact_form_subtitle || 'Điền thông tin bên dưới, đội ngũ BMB Việt Nam sẽ phản hồi trong vòng 24 giờ.' %></p>
 
       <% if (submitted) { %>
         <div class="mt-6 rounded-xl bg-leaf-500/10 p-4 text-sm font-semibold text-leaf-600">
