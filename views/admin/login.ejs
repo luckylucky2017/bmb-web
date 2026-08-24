@@ -28,12 +28,23 @@
       <form action="/admin/login" method="POST" class="mt-6 space-y-5">
         <div>
           <label class="text-sm font-semibold text-slate-700">Email</label>
-          <input type="email" name="email" required autofocus class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+          <input type="email" name="email" value="<%= typeof email !== 'undefined' ? email : '' %>" required <%= typeof captchaSvg === 'undefined' || !captchaSvg ? 'autofocus' : '' %> class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
         </div>
         <div>
           <label class="text-sm font-semibold text-slate-700">Mật khẩu</label>
           <input type="password" name="password" required class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
         </div>
+        <% if (typeof captchaSvg !== 'undefined' && captchaSvg) { %>
+          <div>
+            <label class="text-sm font-semibold text-slate-700">Mã xác nhận</label>
+            <p class="mt-1 text-xs text-slate-400">Đăng nhập sai nhiều lần — nhập đúng mã bên dưới để tiếp tục.</p>
+            <div class="mt-2 flex items-center gap-3">
+              <div id="captcha-box" class="shrink-0 overflow-hidden rounded-lg border border-slate-200"><%- captchaSvg %></div>
+              <button type="button" id="captcha-refresh" class="text-xs font-semibold text-brand-600 hover:underline">Đổi mã khác</button>
+            </div>
+            <input type="text" name="captcha" required autofocus autocomplete="off" placeholder="Nhập mã trong ảnh" class="mt-2 w-full rounded-lg border border-slate-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-100" />
+          </div>
+        <% } %>
         <button type="submit" class="btn-primary w-full">Đăng nhập</button>
       </form>
     </div>
@@ -42,5 +53,6 @@
       <a href="/" class="hover:text-white">&larr; Về trang chủ website</a>
     </p>
   </div>
+  <script src="/js/login.js"></script>
 </body>
 </html>

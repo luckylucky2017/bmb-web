@@ -111,7 +111,10 @@ Các module chính (đường dẫn dưới `/admin`):
 | Người dùng | `/admin/nguoi-dung` | Chỉ superadmin |
 
 Bảo mật đã áp dụng (xem `server.js`, `routes/admin/auth.js`, `middleware/upload.js`):
-- Rate-limit đăng nhập theo IP (15 lần/15 phút) **+** khoá tài khoản 15 phút sau 5 lần sai liên tiếp.
+- Rate-limit đăng nhập theo IP (15 lần/15 phút) **+** khoá tài khoản 15 phút sau 5 lần sai liên tiếp
+  **+** bắt buộc giải CAPTCHA (tự sinh SVG qua `svg-captcha`, không phụ thuộc dịch vụ ngoài như Google
+  reCAPTCHA) sau 3 lần sai — xem `routes/admin/auth.js`. Cả 2 bộ đếm dùng chung 1 `Map` trong bộ nhớ
+  theo email, nên chỉ đúng khi app chạy **1 tiến trình** (đúng với cách deploy hiện tại qua systemd).
 - Session ID được cấp lại (`regenerate`) khi đăng nhập thành công — chống session fixation.
 - CSP nghiêm ngặt qua `helmet` — **mọi script phải là file ngoài** (`public/js/*.js`), không được
   viết `<script>` inline hay `onclick=` trong `.ejs`, sẽ bị CSP chặn im lặng.
