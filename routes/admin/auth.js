@@ -14,42 +14,51 @@ const loginIpLimiter = rateLimit({
   message: "Quá nhiều lần đăng nhập từ địa chỉ này. Vui lòng thử lại sau 15 phút."
 });
 
-// Per-account lockout: stops password-guessing against one email even
-// from rotating IPs. In-memory is fine for this single-process deployment.
-const failedAttempts = new Map(); // email -> { count, lockedUntil }
+// Failed-attempt tracking is keyed by IP+email together, not email alone.
+// Keying by email alone would let anyone who merely knows (or guesses) the
+// admin email lock the real owner out of their own account from anywhere,
+// without ever knowing the password — a free denial-of-service against a
+// public-ish address like admin@bmbvietnam.vn. Keyed by IP+email, an
+// attacker can only ever lock out *their own* IP's attempts; the real
+// owner logging in from their usual network is unaffected. In-memory is
+// fine for this single-process deployment.
+const failedAttempts = new Map(); // "ip:email" -> { count, lockedUntil }
 const MAX_ATTEMPTS = 5;
 const LOCK_MS = 15 * 60 * 1000;
-// After this many failures, a scripted credential-stuffing attempt is the
-// working assumption — require solving a CAPTCHA before another password
-// guess is even checked, regardless of which IP it comes from next.
+// After this many failures from the same IP+email, require solving a
+// CAPTCHA before another password guess is even checked.
 const CAPTCHA_AFTER_ATTEMPTS = 3;
 
-function isLocked(email) {
-  const rec = failedAttempts.get(email);
+function attemptKey(req, email) {
+  return `${req.ip}:${email}`;
+}
+
+function isLocked(key) {
+  const rec = failedAttempts.get(key);
   if (!rec) return false;
   if (rec.lockedUntil && rec.lockedUntil > Date.now()) return true;
   if (rec.lockedUntil && rec.lockedUntil <= Date.now()) {
-    failedAttempts.delete(email);
+    failedAttempts.delete(key);
   }
   return false;
 }
 
-function needsCaptcha(email) {
-  const rec = failedAttempts.get(email);
+function needsCaptcha(key) {
+  const rec = failedAttempts.get(key);
   return !!rec && rec.count >= CAPTCHA_AFTER_ATTEMPTS;
 }
 
-function recordFailure(email) {
-  const rec = failedAttempts.get(email) || { count: 0, lockedUntil: null };
+function recordFailure(key) {
+  const rec = failedAttempts.get(key) || { count: 0, lockedUntil: null };
   rec.count += 1;
   if (rec.count >= MAX_ATTEMPTS) {
     rec.lockedUntil = Date.now() + LOCK_MS;
   }
-  failedAttempts.set(email, rec);
+  failedAttempts.set(key, rec);
 }
 
-function clearFailures(email) {
-  failedAttempts.delete(email);
+function clearFailures(key) {
+  failedAttempts.delete(key);
 }
 
 function renderCaptcha(req) {
@@ -68,7 +77,7 @@ function renderCaptcha(req) {
 router.get("/login", (req, res) => {
   if (req.session.userId) return res.redirect("/admin");
   const email = (req.query.email || "").trim().toLowerCase();
-  const showCaptcha = needsCaptcha(email);
+  const showCaptcha = email ? needsCaptcha(attemptKey(req, email)) : false;
   res.render("admin/login", {
     layout: false,
     title: "Đăng nhập quản trị | BMB Việt Nam",
@@ -88,17 +97,18 @@ router.post(
     const email = (req.body.email || "").trim().toLowerCase();
     const password = req.body.password || "";
     const captchaAnswer = (req.body.captcha || "").trim().toLowerCase();
+    const key = attemptKey(req, email);
 
-    if (isLocked(email)) {
-      req.flash("error", "Tài khoản tạm khoá do đăng nhập sai nhiều lần. Vui lòng thử lại sau 15 phút.");
-      return res.redirect("/admin/login");
+    if (isLocked(key)) {
+      req.flash("error", "Đăng nhập từ địa chỉ này đang tạm khoá do sai nhiều lần. Vui lòng thử lại sau 15 phút.");
+      return res.redirect(`/admin/login?email=${encodeURIComponent(email)}`);
     }
 
-    if (needsCaptcha(email)) {
+    if (needsCaptcha(key)) {
       const expected = req.session.captchaText;
       req.session.captchaText = null; // one-time use regardless of outcome
       if (!expected || captchaAnswer !== expected) {
-        recordFailure(email);
+        recordFailure(key);
         req.flash("error", "Mã xác nhận không đúng. Vui lòng thử lại.");
         return res.redirect(`/admin/login?email=${encodeURIComponent(email)}`);
       }
@@ -106,12 +116,12 @@ router.post(
 
     const user = await User.findByEmail(email);
     if (!user || !user.active || !User.verifyPassword(user, password)) {
-      recordFailure(email);
+      recordFailure(key);
       req.flash("error", "Email hoặc mật khẩu không đúng.");
       return res.redirect(`/admin/login?email=${encodeURIComponent(email)}`);
     }
 
-    clearFailures(email);
+    clearFailures(key);
     req.session.regenerate((err) => {
       if (err) throw err;
       req.session.userId = user.id;
