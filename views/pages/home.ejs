@@ -1,23 +1,36 @@
 <!-- Hero -->
-<section class="relative h-[640px] overflow-hidden text-white sm:h-[720px]">
+<section class="relative h-[680px] overflow-hidden text-white sm:h-[760px]">
   <img src="<%= site.hero_image || '/images/hero/hero-main.svg' %>" alt="<%= site.hero_title || 'Nước khoáng Lavie' %>" class="absolute inset-0 h-full w-full object-cover" />
-  <div class="absolute inset-0 bg-gradient-to-b from-brand-950/20 via-brand-950/10 to-brand-950/60"></div>
+  <div class="absolute inset-0 bg-gradient-to-b from-brand-950/10 via-transparent to-brand-950/40"></div>
+
+  <!-- Floating mineral-content chips — BMB's own simple badge style
+       (not a copy of Lavie's product photography), just surfacing the
+       same "natural minerals" fact real mineral water brands lead with. -->
+  <div class="absolute left-[6%] top-[22%] z-10 hidden animate-[float_5s_ease-in-out_infinite] rounded-full bg-white/90 px-4 py-2 text-sm font-extrabold text-brand-700 shadow-card backdrop-blur sm:block">
+    Ca<sup>2+</sup>
+  </div>
+  <div class="absolute right-[10%] top-[16%] z-10 hidden animate-[float_5s_ease-in-out_infinite_0.7s] rounded-full bg-white/90 px-4 py-2 text-sm font-extrabold text-brand-700 shadow-card backdrop-blur sm:block">
+    Mg<sup>2+</sup>
+  </div>
+  <div class="absolute right-[4%] top-[42%] z-10 hidden animate-[float_5s_ease-in-out_infinite_1.4s] rounded-full bg-white/90 px-4 py-2 text-sm font-extrabold text-brand-700 shadow-card backdrop-blur sm:block">
+    K<sup>+</sup>
+  </div>
 
   <!-- side vertical tab -->
-  <a href="/dai-ly" class="absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 items-center rounded-r-lg bg-brand-600/90 px-2 py-6 text-xs font-bold uppercase tracking-widest text-white shadow-card sm:flex">
+  <a href="/dai-ly" class="absolute left-0 top-1/2 z-10 hidden -translate-y-1/2 items-center rounded-r-lg bg-accent-600/90 px-2 py-6 text-xs font-bold uppercase tracking-widest text-white shadow-card sm:flex">
     <span class="[writing-mode:vertical-rl]">Khu vực giao hàng</span>
   </a>
 
   <div class="relative container-page flex h-full flex-col items-center justify-center text-center">
-    <span class="section-eyebrow bg-white/15 text-white backdrop-blur">Đại lý phân phối chính thức Lavie tại Hà Nội</span>
-    <h1 class="mt-6 max-w-3xl font-display text-4xl font-extrabold uppercase leading-tight tracking-wide sm:text-5xl lg:text-6xl">
+    <span class="section-eyebrow bg-white/20 text-white backdrop-blur">Đại lý phân phối chính thức Lavie tại Hà Nội</span>
+    <h1 class="mt-6 max-w-3xl font-display text-4xl font-extrabold uppercase leading-tight tracking-wide drop-shadow-sm sm:text-5xl lg:text-6xl">
       <%= site.hero_title || 'Nước khoáng Lavie chính hãng giao tận nhà tại Hà Nội' %>
     </h1>
-    <p class="mt-5 max-w-xl text-lg text-white/85">
+    <p class="mt-5 max-w-xl text-lg text-white/90 drop-shadow-sm">
       <%= site.hero_subtitle || 'BMB Việt Nam - đại lý cấp 1 của Lavie khu vực Hà Nội. Đặt nước nhanh chóng, giao trong ngày, đổi bình miễn phí cho hộ gia đình và văn phòng.' %>
     </p>
     <div class="mt-9 flex flex-wrap justify-center gap-4">
-      <a href="<%= site.hero_cta_link || '/san-pham' %>" class="btn-primary"><%= site.hero_cta_text || 'Đặt nước ngay' %></a>
+      <a href="<%= site.hero_cta_link || '/san-pham' %>" class="btn bg-accent-600 text-white shadow-card hover:bg-accent-700"><%= site.hero_cta_text || 'Đặt nước ngay' %></a>
       <a href="<%= site.hero_cta_link_2 || '/dai-ly' %>" class="btn-outline"><%= site.hero_cta_text_2 || 'Xem khu vực giao hàng' %></a>
     </div>
   </div>

@@ -15,6 +15,6 @@
   <rect x="128" y="40" width="44" height="28" rx="6" fill="#2193e8"/>
   <path d="M120 68 h60 l10 40 c6 22 8 40 8 62 v150 a14 14 0 0 1 -14 14 h-68 a14 14 0 0 1 -14 -14 v-150 c0 -22 2 -40 8 -62 z" fill="url(#bottle)" stroke="#49b1f6" stroke-width="2"/>
   <rect x="108" y="220" width="84" height="70" rx="4" fill="#ffffff" opacity="0.92" stroke="#49b1f6" stroke-width="1.5"/>
-  <text x="150" y="248" font-family="'Be Vietnam Pro', Arial, sans-serif" font-weight="800" font-size="20" fill="#49b1f6" text-anchor="middle">La Vie</text>
+  <text x="150" y="248" font-family="'Be Vietnam Pro', Arial, sans-serif" font-weight="800" font-size="20" fill="#49b1f6" text-anchor="middle">Lavie</text>
   <text x="150" y="266" font-family="'Be Vietnam Pro', Arial, sans-serif" font-weight="600" font-size="10" letter-spacing="2" fill="#5b7691" text-anchor="middle">NƯỚC KHOÁNG</text>
 </svg>
