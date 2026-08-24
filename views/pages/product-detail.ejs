@@ -1,3 +1,34 @@
+<%
+  const productImageUrl = /^https?:\/\//.test(product.image) ? product.image : `${siteUrl}${product.image}`;
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: product.name,
+    image: [productImageUrl],
+    description: product.short_description || product.name,
+    brand: { "@type": "Brand", name: "Lavie" },
+    offers: {
+      "@type": "Offer",
+      url: `${siteUrl}/san-pham/${product.slug}`,
+      priceCurrency: "VND",
+      price: product.price,
+      availability: "https://schema.org/InStock",
+      seller: { "@type": "Organization", name: site.company_full_name }
+    }
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Trang chủ", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Sản phẩm", item: `${siteUrl}/san-pham` },
+      { "@type": "ListItem", position: 3, name: product.name, item: `${siteUrl}/san-pham/${product.slug}` }
+    ]
+  };
+%>
+<script type="application/ld+json"><%- JSON.stringify(productSchema) %></script>
+<script type="application/ld+json"><%- JSON.stringify(breadcrumbSchema) %></script>
+
 <section class="border-b border-slate-100 bg-sand-50 py-4">
   <div class="container-page text-sm text-slate-500">
     <a href="/" class="hover:text-brand-600">Trang chủ</a> <span class="mx-1">/</span>

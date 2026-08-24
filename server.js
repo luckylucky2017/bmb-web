@@ -166,7 +166,14 @@ app.use(
 // robots.txt / sitemap.xml — plain text/XML, no layout wrapping needed.
 app.get("/robots.txt", (req, res) => {
   res.type("text/plain").send(
-    ["User-agent: *", "Allow: /", "Disallow: /admin", `Sitemap: ${SITE_URL}/sitemap.xml`].join("\n")
+    [
+      "User-agent: *",
+      "Allow: /",
+      "Disallow: /admin/",
+      "Disallow: /uploads/",
+      "",
+      `Sitemap: ${SITE_URL}/sitemap.xml`
+    ].join("\n")
   );
 });
 
@@ -179,38 +186,53 @@ app.get(
       Page.all({ status: "published" })
     ]);
     const staticUrls = [
-      { loc: "/", priority: "1.0" },
-      { loc: "/gioi-thieu", priority: "0.7" },
-      { loc: "/san-pham", priority: "0.9" },
-      { loc: "/phat-trien-ben-vung", priority: "0.6" },
-      { loc: "/tin-tuc", priority: "0.7" },
-      { loc: "/dai-ly", priority: "0.8" },
-      { loc: "/tuyen-dung", priority: "0.5" },
-      { loc: "/lien-he", priority: "0.6" }
+      { loc: "/", priority: "1.0", changefreq: "daily" },
+      { loc: "/gioi-thieu", priority: "0.7", changefreq: "monthly" },
+      { loc: "/san-pham", priority: "0.9", changefreq: "daily" },
+      { loc: "/phat-trien-ben-vung", priority: "0.6", changefreq: "monthly" },
+      { loc: "/tin-tuc", priority: "0.7", changefreq: "daily" },
+      { loc: "/dai-ly", priority: "0.8", changefreq: "monthly" },
+      { loc: "/tuyen-dung", priority: "0.5", changefreq: "weekly" },
+      { loc: "/lien-he", priority: "0.6", changefreq: "yearly" }
     ];
+    const isAbsolute = (src) => /^https?:\/\//.test(src);
     const productUrls = products.map((p) => ({
       loc: `/san-pham/${p.slug}`,
       priority: "0.8",
-      lastmod: p.updated_at
+      changefreq: "weekly",
+      lastmod: p.updated_at,
+      image: p.image ? (isAbsolute(p.image) ? p.image : `${SITE_URL}${p.image}`) : null,
+      imageTitle: p.name
     }));
     const postUrls = posts.map((p) => ({
       loc: `/tin-tuc/${p.slug}`,
       priority: "0.6",
-      lastmod: p.updated_at
+      changefreq: "monthly",
+      lastmod: p.updated_at,
+      image: p.image ? (isAbsolute(p.image) ? p.image : `${SITE_URL}${p.image}`) : null,
+      imageTitle: p.title
     }));
     const pageUrls = pages.map((p) => ({
       loc: `/trang/${p.slug}`,
       priority: "0.5",
+      changefreq: "monthly",
       lastmod: p.updated_at
     }));
     const all = [...staticUrls, ...productUrls, ...postUrls, ...pageUrls];
+    const escapeXml = (str) =>
+      String(str || "").replace(/[<>&'"]/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", "'": "&apos;", '"': "&quot;" }[c]));
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${all
   .map(
     (u) => `  <url>
     <loc>${SITE_URL}${u.loc}</loc>${u.lastmod ? `\n    <lastmod>${new Date(u.lastmod).toISOString().slice(0, 10)}</lastmod>` : ""}
-    <priority>${u.priority}</priority>
+    <changefreq>${u.changefreq || "monthly"}</changefreq>
+    <priority>${u.priority}</priority>${
+      u.image
+        ? `\n    <image:image>\n      <image:loc>${escapeXml(u.image)}</image:loc>\n      <image:title>${escapeXml(u.imageTitle)}</image:title>\n    </image:image>`
+        : ""
+    }
   </url>`
   )
   .join("\n")}
@@ -274,6 +296,7 @@ app.get(
       title: `${product.name} - Giá ${res.locals.formatVND(product.price)} | Đại Lý Lavie Hà Nội`,
       description: `${product.short_description} Mua ${product.name} chính hãng, giao tận nhà tại Hà Nội qua đại lý BMB Việt Nam.`,
       keywords: `${product.name}, nước lavie, nước khoáng, ${product.category}, mua nước lavie, giá nước lavie`,
+      ogImage: product.image,
       product,
       related,
       orderSubmitted: false
@@ -294,6 +317,7 @@ app.post(
       title: `${product.name} - Giá ${res.locals.formatVND(product.price)} | Đại Lý Lavie Hà Nội`,
       description: `${product.short_description} Mua ${product.name} chính hãng, giao tận nhà tại Hà Nội qua đại lý BMB Việt Nam.`,
       keywords: `${product.name}, nước lavie, nước khoáng, ${product.category}, mua nước lavie, giá nước lavie`,
+      ogImage: product.image,
       product,
       related,
       orderSubmitted: true
@@ -335,6 +359,7 @@ app.get(
       title: `${article.title} | BMB Việt Nam`,
       description: article.excerpt,
       keywords: `${article.category}, nước lavie, đại lý nước hà nội, tin tức nước khoáng`,
+      ogImage: article.image,
       article,
       related
     });

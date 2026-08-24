@@ -1,3 +1,33 @@
+<%
+  const articleImageUrl = /^https?:\/\//.test(article.image) ? article.image : `${siteUrl}${article.image}`;
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    image: [articleImageUrl],
+    datePublished: new Date(article.published_at).toISOString(),
+    dateModified: new Date(article.updated_at || article.published_at).toISOString(),
+    author: { "@type": "Organization", name: site.company_full_name },
+    publisher: {
+      "@type": "Organization",
+      name: siteName,
+      logo: { "@type": "ImageObject", url: `${siteUrl}/images/logo.svg` }
+    },
+    mainEntityOfPage: `${siteUrl}/tin-tuc/${article.slug}`
+  };
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Trang chủ", item: siteUrl },
+      { "@type": "ListItem", position: 2, name: "Tin tức", item: `${siteUrl}/tin-tuc` },
+      { "@type": "ListItem", position: 3, name: article.title, item: `${siteUrl}/tin-tuc/${article.slug}` }
+    ]
+  };
+%>
+<script type="application/ld+json"><%- JSON.stringify(articleSchema) %></script>
+<script type="application/ld+json"><%- JSON.stringify(breadcrumbSchema) %></script>
+
 <section class="border-b border-slate-100 bg-sand-50 py-4">
   <div class="container-page text-sm text-slate-500">
     <a href="/" class="hover:text-brand-600">Trang chủ</a> <span class="mx-1">/</span>
