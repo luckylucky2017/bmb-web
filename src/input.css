@@ -21,17 +21,19 @@
     --font-sans: "Be Vietnam Pro";
     --font-display: "Be Vietnam Pro";
 
-    --c-brand-50: 238 248 255;
-    --c-brand-100: 217 238 254;
-    --c-brand-200: 183 224 253;
-    --c-brand-300: 132 205 251;
-    --c-brand-400: 73 177 246;
-    --c-brand-500: 33 147 232;
-    --c-brand-600: 20 118 199;
-    --c-brand-700: 18 95 162;
-    --c-brand-800: 19 79 133;
-    --c-brand-900: 21 66 110;
-    --c-brand-950: 12 41 71;
+    /* Aqua-teal spring-water blue — closer to Lavie's actual mineral-water
+       brand identity (mountain spring / aqua) than a flat generic sky blue. */
+    --c-brand-50: 236 253 253;
+    --c-brand-100: 207 246 247;
+    --c-brand-200: 162 236 240;
+    --c-brand-300: 103 216 224;
+    --c-brand-400: 51 186 197;
+    --c-brand-500: 22 155 168;
+    --c-brand-600: 14 122 135;
+    --c-brand-700: 14 97 108;
+    --c-brand-800: 17 78 87;
+    --c-brand-900: 18 64 72;
+    --c-brand-950: 10 38 44;
 
     --c-accent-50: 254 242 242;
     --c-accent-100: 254 226 226;
