@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Tells Chrome/Android WebView this page has its own light design, so
+       they don't apply "force dark" auto-recoloring — that heuristic was
+       washing out the brand-blue sections and muting text on some phones. -->
+  <meta name="color-scheme" content="light" />
   <title><%= typeof title !== "undefined" ? title : "BMB Việt Nam" %></title>
   <meta name="description" content="<%= typeof description !== 'undefined' ? description : '' %>" />
   <% if (typeof keywords !== "undefined" && keywords) { %>

@@ -5,6 +5,9 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* Belt-and-suspenders alongside the <meta name="color-scheme"> tag —
+       stops browsers from auto-recoloring this light-only design. */
+    color-scheme: light;
   }
   body {
     @apply font-sans text-slate-700 antialiased;
