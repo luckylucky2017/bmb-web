@@ -1,8 +1,8 @@
-<footer class="bg-gradient-to-b from-brand-900 to-brand-950 text-slate-300">
+<footer class="bg-gradient-to-b from-brand-600 to-brand-800 text-slate-100">
   <div class="container-page grid grid-cols-1 gap-10 py-16 sm:grid-cols-2 lg:grid-cols-4">
     <div>
       <img src="/images/logo-white.svg" alt="BMB Việt Nam" class="h-10 w-auto" />
-      <p class="mt-4 text-sm leading-relaxed text-slate-400">
+      <p class="mt-4 text-sm leading-relaxed text-brand-100">
         Công ty TNHH BMB Việt Nam &mdash; đại lý phân phối chính thức nước khoáng Lavie khu vực Hà Nội.
       </p>
       <div class="mt-5 flex gap-3">
@@ -29,7 +29,7 @@
 
     <div>
       <h4 class="font-display text-sm font-bold uppercase tracking-wider text-white">Liên hệ</h4>
-      <ul class="mt-4 space-y-3 text-sm text-slate-400">
+      <ul class="mt-4 space-y-3 text-sm text-brand-100">
         <li class="flex gap-2"><span>📍</span><span><%= site.address %></span></li>
         <% if (site.address_2) { %>
           <li class="flex gap-2"><span>📍</span><span><%= site.address_2 %></span></li>
@@ -42,16 +42,16 @@
 
     <div>
       <h4 class="font-display text-sm font-bold uppercase tracking-wider text-white">Đăng ký nhận tin</h4>
-      <p class="mt-4 text-sm text-slate-400">Nhận thông tin mới nhất về sản phẩm và ưu đãi từ BMB Việt Nam.</p>
+      <p class="mt-4 text-sm text-brand-100">Nhận thông tin mới nhất về sản phẩm và ưu đãi từ BMB Việt Nam.</p>
       <form class="mt-4 flex overflow-hidden rounded-full bg-white/10 p-1">
-        <input type="email" required placeholder="Email của bạn" class="w-full bg-transparent px-4 text-sm text-white placeholder:text-slate-400 focus:outline-none" />
+        <input type="email" required placeholder="Email của bạn" class="w-full bg-transparent px-4 text-sm text-white placeholder:text-brand-100 focus:outline-none" />
         <button type="submit" class="shrink-0 rounded-full bg-brand-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-400">Gửi</button>
       </form>
     </div>
   </div>
 
   <div class="border-t border-white/10">
-    <div class="container-page flex flex-col items-center justify-between gap-3 py-6 text-xs text-slate-400 sm:flex-row">
+    <div class="container-page flex flex-col items-center justify-between gap-3 py-6 text-xs text-brand-100 sm:flex-row">
       <p>&copy; <%= new Date().getFullYear() %> <%= site.company_full_name %>. Đã đăng ký bản quyền.</p>
       <p>Giấy CNĐKKD số <%= site.tax_code %> do Sở Tài chính Hà Nội cấp.</p>
     </div>
