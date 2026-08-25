@@ -108,13 +108,13 @@
 
 <button
   type="button"
-  class="js-call-trigger fixed bottom-5 left-5 z-40 hidden items-center gap-2 rounded-full bg-accent-600 px-4 py-2.5 text-white shadow-card sm:flex"
+  class="js-call-trigger fixed bottom-5 left-5 z-40 hidden items-center gap-2 rounded-full bg-white px-4 py-2.5 text-brand-700 shadow-card ring-1 ring-slate-100 sm:flex"
   data-tel="<%= (site.hotline || '').replace(/\s+/g, '') %>"
   data-tel2="<%= (site.hotline_2 || '').replace(/\s+/g, '') %>"
 >
   <span>📞</span>
   <span class="leading-tight text-left">
-    <span class="block text-[10px] font-semibold uppercase text-accent-100">Call / Zalo đặt hàng</span>
+    <span class="block text-[10px] font-semibold uppercase text-slate-400">Call / Zalo đặt hàng</span>
     <span class="block text-sm font-extrabold"><%= site.hotline %></span>
   </span>
 </button>
@@ -125,11 +125,11 @@
        corner of the screen. -->
   <a
     href="tel:<%= site.hotline_2.replace(/\s+/g, '') %>"
-    class="fixed right-5 top-24 z-40 hidden items-center gap-2 rounded-full bg-accent-600 px-4 py-2.5 text-white shadow-card transition hover:bg-accent-700 sm:flex"
+    class="fixed right-5 top-24 z-40 hidden items-center gap-2 rounded-full bg-white px-4 py-2.5 text-brand-700 shadow-card ring-1 ring-slate-100 transition hover:bg-brand-50 sm:flex"
   >
     <span>📞</span>
     <span class="leading-tight text-left">
-      <span class="block text-[10px] font-semibold uppercase text-accent-100">Call / Zalo đặt hàng</span>
+      <span class="block text-[10px] font-semibold uppercase text-slate-400">Call / Zalo đặt hàng</span>
       <span class="block text-sm font-extrabold"><%= site.hotline_2 %></span>
     </span>
   </a>
