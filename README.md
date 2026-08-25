@@ -227,10 +227,11 @@ sửa code hay deploy lại. Cơ chế:
    trị sẽ bị lọc bỏ khi lưu — đây là whitelist chống mass-assignment).
 4. `npm run build:css` rồi deploy.
 
-Nút "Đặt nước" và giá tiền trước đây dùng thẳng `red-*` của Tailwind — đã đổi hết sang `accent-*`
-(xem 5 file: `header.ejs`, `home.ejs`, `products.ejs`, `product-detail.ejs`, `contact.ejs`) để chúng
-đổi màu theo theme. **Nếu thêm section mới có nút CTA hoặc giá tiền, dùng `accent-600`/`accent-700`,
-đừng dùng `red-*` trực tiếp**, nếu không nó sẽ không đổi theo theme.
+Giá tiền và số hotline trước đây dùng thẳng `red-*` của Tailwind — đã đổi hết sang `accent-*` (xem
+`header.ejs`, `home.ejs`, `products.ejs`, `product-detail.ejs`, `contact.ejs`) để chúng đổi màu theo
+theme. **Nếu thêm giá tiền hoặc text cần nhấn mạnh, dùng `accent-600`/`accent-700`, đừng dùng `red-*`
+trực tiếp.** Riêng nút CTA (background đặc) thì xem quy tắc ở mục 6c ngay trên — không phải lúc nào
+cũng nên dùng `accent-600` làm nền nút.
 
 ---
 
@@ -245,9 +246,11 @@ hay deploy lại:
 | Menu điều hướng (header) | `/admin/menu` | Bảng `menu_items` | `views/partials/header.ejs`, đọc qua `res.locals.menuItems` (nạp 1 lần cho mọi trang công khai trong `server.js`) |
 | Quảng cáo dọc 2 bên | `/admin/quang-cao` | Bảng `ad_banners` (cột `position`: `left`/`right`) | `views/partials/ad-banners.ejs`, include trong `layout.ejs` |
 
-**Quảng cáo 2 bên** chỉ hiện ở màn hình **≥ 1536px** (`2xl:flex`, ẩn mặc định) — vì container chính
-rộng tối đa 1440px, dưới 1536px không có đủ khoảng trống 2 bên để đặt banner mà không đè lên nội
-dung. Đừng hạ breakpoint này xuống thấp hơn nếu chưa kiểm tra kỹ trên các độ rộng màn hình phổ biến.
+**Quảng cáo 2 bên** chỉ hiện ở màn hình **≥ 1440px** (`min-[1440px]:flex`, rộng `w-24`/96px, ẩn mặc
+định) — breakpoint ban đầu đặt ở `2xl` (1536px) dựa trên giả định sai là `.container-page` rộng
+1440px; thực tế nó chỉ `max-w-7xl` (1280px) + padding riêng, nên ở 1536px vẫn thiếu chỗ và banner
+không hiện trên phần lớn laptop 13"/14" (1440–1512px). Đã hạ xuống 1440px và thu hẹp banner còn
+96px. Đừng hạ breakpoint này xuống thấp hơn nếu chưa kiểm tra kỹ trên các độ rộng màn hình phổ biến.
 
 **Migrate dữ liệu cũ:** khi thêm 3 phần này, `db/database.js` có thêm 2 hàm chạy ở mỗi lần khởi
 động (`backfillMenuItemsIfEmpty()`, `backfillHeroSettingsIfMissing()`), tự sinh dữ liệu mặc định
@@ -258,6 +261,31 @@ bảng mới tương tự (có dữ liệu cũ cần giữ), nên theo đúng pa
 **An toàn:** `label`/`url` của menu và `link_url` của quảng cáo là text admin tự nhập, render thẳng
 vào `href="..."` — đều đi qua `models/safeUrl.js` (chặn `javascript:`, `data:`...) trước khi lưu.
 Quản lý cả 3 phần này yêu cầu role `admin`/`superadmin` (không cho `editor`), cùng mức với Cài đặt.
+
+---
+
+## 6c. Bảng màu hiện tại: xanh dương Lavie + cam trắng
+
+Theme mặc định (`:root` trong `src/input.css`) dùng dải "sky" của Tailwind làm `--c-brand-*`
+(`brand-600 = #0284c7`), khớp màu chủ đạo thật của lavievietnam.vn — không phải màu đoán, đã đối
+chiếu với ảnh chụp trang đó. `--c-accent-*` hiện là cam (`accent-600 = #ea580c`) nhưng **chỉ dùng
+cho text nhấn mạnh** (giá tiền, số hotline) — các nút CTA nằm trên nền xanh (hero, banner đầu trang
+con, footer, khối CTA cuối trang, 2 bong bóng Call/Zalo nổi) đã đổi sang `bg-white text-brand-700`
+thay vì `bg-accent-600`, vì nền cam trên nền xanh từng bị phản hồi là lệch tông. **Nếu thêm nút CTA
+mới trên nền `bg-brand-*` (500–800), dùng kiểu trắng/xanh này, đừng dùng `accent-600` làm nền.**
+
+Một số điểm cần nhớ khi đổi màu về sau:
+- Màu `aqua-*` trong `tailwind.config.js` **không** trỏ vào biến CSS — là hex cố định, cố tình alias
+  cùng dải sky-blue với `brand-*` để không bị "lạc tông" khi ai đó dùng `bg-aqua-500` cho decor. Nếu
+  đổi `brand-*` sang tông khác, nhớ đổi `aqua-*` theo, không thì sẽ lặp lại đúng lỗi từng gặp (bản
+  teal cũ để sót trong `page-header.ejs`, các badge icon, gradient "leaf-to-aqua").
+- Các mảng nền đặc màu tối (`footer.ejs`, `page-header.ejs`, khối CTA cuối `home.ejs`/`products.ejs`/
+  `distributors.ejs`) cố tình dùng `brand-500` đến `brand-800` — **tránh dùng `brand-900`/`brand-950`
+  cho nền lớn**, vì ở độ tối đó nó ngả gần đen, nhìn không còn giống "xanh dương" nữa và tạo cảm giác
+  trên/dưới trang lệch tông nhau (đã bị phản hồi và sửa 1 lần).
+- Sau khi sửa `src/input.css` hoặc `tailwind.config.js`, luôn chạy `npm run build:css` trước khi
+  deploy — biến CSS `--c-*` không cần build lại để đổi giá trị, nhưng **thêm class Tailwind mới**
+  (vd đổi `aqua-600` từ 3 shade lên 4 shade) thì bắt buộc phải build lại để class đó được sinh ra.
 
 ---
 
