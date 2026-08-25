@@ -34,10 +34,14 @@ module.exports = {
           600: "rgb(var(--c-accent-600) / <alpha-value>)",
           700: "rgb(var(--c-accent-700) / <alpha-value>)"
         },
+        // Kept as a fixed alias of the default sky-blue brand shades (not
+        // CSS-var driven) for the few decorative gradients/icon badges that
+        // want a constant accent regardless of the active [data-theme].
         aqua: {
-          400: "#5fd9dd",
-          500: "#2cc3c9",
-          600: "#1c9fa5"
+          400: "#38bdf8",
+          500: "#0ea5e9",
+          600: "#0284c7",
+          700: "#0369a1"
         },
         leaf: {
           400: "#7fcf8f",
