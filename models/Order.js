@@ -74,6 +74,32 @@ const Order = {
       connection.release();
     }
   },
+  async createFromCart(items, data) {
+    const total = items.reduce((sum, item) => sum + item.lineTotal, 0);
+    const connection = await pool.getConnection();
+    try {
+      await connection.beginTransaction();
+      const [result] = await connection.query(
+        `INSERT INTO orders (code, customer_name, phone, email, address, note, status, total_amount)
+         VALUES (?, ?, ?, ?, ?, ?, 'new', ?)`,
+        [genCode(), data.customer_name, data.phone, data.email || "", data.address || "", data.note || "", total]
+      );
+      for (const item of items) {
+        await connection.query(
+          `INSERT INTO order_items (order_id, product_id, product_name, price, quantity)
+           VALUES (?, ?, ?, ?, ?)`,
+          [result.insertId, item.product.id, item.product.name, item.product.price, item.quantity]
+        );
+      }
+      await connection.commit();
+      return result.insertId;
+    } catch (err) {
+      await connection.rollback();
+      throw err;
+    } finally {
+      connection.release();
+    }
+  },
   async updateStatus(id, status) {
     await pool.query("UPDATE orders SET status = ? WHERE id = ?", [status, id]);
   },

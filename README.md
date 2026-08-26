@@ -289,6 +289,36 @@ Một số điểm cần nhớ khi đổi màu về sau:
 
 ---
 
+## 6d. Giỏ hàng & đặt hàng nhiều sản phẩm
+
+Trước đây khách chỉ đặt được **1 sản phẩm/lần** (form "Đặt hàng ngay" trong `product-detail.ejs`,
+vẫn còn nguyên, dùng cho khách muốn mua nhanh 1 món). Giờ có thêm luồng **giỏ hàng** để gom nhiều
+sản phẩm rồi đặt 1 lần — không cần bảng mới, tái dùng đúng bảng `orders`/`order_items` đã có sẵn
+(vốn đã được thiết kế multi-item từ đầu, chỉ chưa có UI khai thác).
+
+- **Giỏ hàng lưu ở session** (`models/Cart.js`), không lưu DB — dạng `{ productId: quantity }` trong
+  `req.session.cart`. Khách không cần đăng nhập/đăng ký. Giỏ mất khi hết hạn session (8 giờ) hoặc xoá
+  cookie — chấp nhận được vì đây là web bán hàng nhỏ, không phải sàn TMĐT cần giỏ hàng bền lâu dài.
+- **Route**: `POST /gio-hang/them` (thêm), `GET /gio-hang` (xem + form đặt hàng), `POST
+  /gio-hang/cap-nhat` (đổi số lượng — đặt về 0 sẽ tự xoá dòng đó), `POST /gio-hang/xoa` (xoá 1 dòng),
+  `POST /gio-hang/dat-hang` (chốt đơn — tạo `orders` + nhiều `order_items`, dùng
+  `Order.createFromCart()`, rồi xoá sạch giỏ).
+- **Đặt hàng ngay** (1 sản phẩm, tại trang chi tiết) và **giỏ hàng** (nhiều sản phẩm) đổ vào **cùng 1
+  bảng orders** — trang quản trị `/admin/don-hang` không cần sửa gì, đã tự hỗ trợ hiển thị nhiều dòng
+  sản phẩm/đơn từ trước.
+- **`res.locals.cartCount`** được tính ở middleware chung (`server.js`, ngay chỗ nạp `menuItems`) nên
+  badge số lượng trên icon giỏ hàng (`header.ejs`, cả bản desktop lẫn thanh mobile dưới cùng) luôn
+  đúng mà không cần gọi thêm ở từng route.
+- **An toàn**: nút "Thêm vào giỏ" không dùng `href`/JS để tránh redirect tuỳ ý — field `next` (nếu
+  có) bị lọc qua whitelist regex trong `safeCartRedirect()` (`server.js`), chỉ chấp nhận `/san-pham`
+  hoặc `/san-pham/<slug>`, giá trị khác sẽ rơi về `/gio-hang`. Số lượng/product_id luôn được
+  `parseInt` + `clamp` (`models/Cart.js`), không tin theo giá trị người dùng gửi lên.
+- **Nếu thêm sản phẩm mới có nút "Thêm vào giỏ"**: copy đúng pattern 3 input ẩn `product_id`,
+  `quantity`, `next` (tuỳ chọn) trong 1 `<form action="/gio-hang/them" method="POST">`, không cần
+  JS — toàn bộ luồng hoạt động không cần JavaScript (progressive, giống style form khác trong site).
+
+---
+
 ## 7. Quy trình sửa code + build + deploy
 
 **Bắt buộc sau khi sửa `.ejs` hoặc `src/input.css`:**

@@ -62,6 +62,12 @@
 
       <div class="mt-9 flex flex-wrap gap-4">
         <a href="#dat-hang" class="btn-primary">Đặt hàng ngay</a>
+        <form action="/gio-hang/them" method="POST">
+          <input type="hidden" name="product_id" value="<%= product.id %>" />
+          <input type="hidden" name="quantity" value="1" />
+          <input type="hidden" name="next" value="/san-pham/<%= product.slug %>" />
+          <button type="submit" class="btn-ghost">🛒 Thêm vào giỏ hàng</button>
+        </form>
         <a href="/dai-ly" class="btn-ghost">Tìm đại lý gần bạn</a>
       </div>
     </div>

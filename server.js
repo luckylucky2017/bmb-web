@@ -12,7 +12,7 @@ const methodOverride = require("method-override");
 
 const db = require("./db/database");
 const asyncHandler = require("./middleware/asyncHandler");
-const { validateContact, validateOrder } = require("./middleware/validate");
+const { validateContact, validateOrder, validateCartCheckout } = require("./middleware/validate");
 
 const Product = require("./models/Product");
 const Post = require("./models/Post");
@@ -20,6 +20,7 @@ const Page = require("./models/Page");
 const Distributor = require("./models/Distributor");
 const Job = require("./models/Job");
 const Order = require("./models/Order");
+const Cart = require("./models/Cart");
 const ContactMessage = require("./models/ContactMessage");
 const Setting = require("./models/Setting");
 const MenuItem = require("./models/MenuItem");
@@ -159,6 +160,7 @@ app.use(
     res.locals.menuItems = await MenuItem.all({ status: "active" });
     res.locals.adBannersLeft = await AdBanner.all({ position: "left", status: "active" });
     res.locals.adBannersRight = await AdBanner.all({ position: "right", status: "active" });
+    res.locals.cartCount = Cart.count(req);
     next();
   })
 );
@@ -320,6 +322,83 @@ app.post(
       ogImage: product.image,
       product,
       related,
+      orderSubmitted: true
+    });
+  })
+);
+
+// Only ever redirect an add-to-cart POST back to a product listing/detail
+// page we ourselves rendered the form on — never to an arbitrary path, so
+// this can't be turned into an open redirect via a tampered "next" field.
+function safeCartRedirect(next) {
+  if (typeof next === "string" && /^\/san-pham(\/[a-z0-9-]+)?$/.test(next)) return next;
+  return "/gio-hang";
+}
+
+app.post(
+  "/gio-hang/them",
+  publicFormLimiter,
+  asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.body.product_id);
+    if (!product || product.status !== "published") {
+      return res.status(404).send("Không tìm thấy sản phẩm");
+    }
+    Cart.add(req, product.id, req.body.quantity);
+    req.flash("success", `Đã thêm "${product.name}" vào giỏ hàng.`);
+    res.redirect(safeCartRedirect(req.body.next));
+  })
+);
+
+app.get(
+  "/gio-hang",
+  asyncHandler(async (req, res) => {
+    const items = await Cart.getItems(req);
+    res.render("pages/cart", {
+      title: `Giỏ hàng | ${res.locals.siteName}`,
+      description: "Xem lại giỏ hàng và đặt mua nước khoáng Lavie tại BMB Việt Nam.",
+      items,
+      total: Cart.total(items),
+      orderSubmitted: false
+    });
+  })
+);
+
+app.post(
+  "/gio-hang/cap-nhat",
+  publicFormLimiter,
+  asyncHandler(async (req, res) => {
+    const items = await Cart.getItems(req);
+    for (const item of items) {
+      const raw = req.body[`quantity_${item.product.id}`];
+      if (raw !== undefined) Cart.setQuantity(req, item.product.id, raw);
+    }
+    res.redirect("/gio-hang");
+  })
+);
+
+app.post(
+  "/gio-hang/xoa",
+  publicFormLimiter,
+  asyncHandler(async (req, res) => {
+    Cart.remove(req, req.body.product_id);
+    res.redirect("/gio-hang");
+  })
+);
+
+app.post(
+  "/gio-hang/dat-hang",
+  publicFormLimiter,
+  validateCartCheckout,
+  asyncHandler(async (req, res) => {
+    const items = await Cart.getItems(req);
+    if (!items.length) return res.redirect("/gio-hang");
+    await Order.createFromCart(items, req.body);
+    Cart.clear(req);
+    res.render("pages/cart", {
+      title: `Giỏ hàng | ${res.locals.siteName}`,
+      description: "Xem lại giỏ hàng và đặt mua nước khoáng Lavie tại BMB Việt Nam.",
+      items: [],
+      total: 0,
       orderSubmitted: true
     });
   })

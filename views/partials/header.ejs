@@ -19,6 +19,14 @@
     </nav>
 
     <div class="hidden items-center gap-3 xl:flex xl:gap-4">
+      <a href="/gio-hang" aria-label="Giỏ hàng" class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-brand-700 transition hover:bg-brand-50">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 1.977-4.744 2.517-7.348a1.125 1.125 0 00-1.11-1.352H5.106M7.5 14.25L5.106 5.032M7.5 14.25L5.106 5.032" />
+        </svg>
+        <% if (cartCount > 0) { %>
+          <span class="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent-600 px-1 text-[10px] font-bold text-white"><%= cartCount %></span>
+        <% } %>
+      </a>
       <a href="/lien-he" class="btn shrink-0 whitespace-nowrap !px-5 bg-accent-600 text-white shadow-soft hover:bg-accent-700">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.5-9.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 8.5-8.5Z" />
@@ -94,6 +102,15 @@
   <a href="<%= site.facebook_url || '#' %>" target="_blank" rel="noopener" class="flex flex-1 flex-col items-center justify-center gap-0.5 border-l border-slate-100 py-2 text-brand-600 active:bg-slate-50">
     <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06C2 17.08 5.66 21.23 10.44 22v-7.03H7.9v-2.9h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.87h2.78l-.44 2.9h-2.34V22C18.34 21.23 22 17.08 22 12.06Z"/></svg>
     <span class="text-[10px] font-semibold leading-none">Facebook</span>
+  </a>
+  <a href="/gio-hang" class="relative flex flex-1 flex-col items-center justify-center gap-0.5 border-l border-slate-100 py-2 text-brand-700 active:bg-slate-50">
+    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 1.977-4.744 2.517-7.348a1.125 1.125 0 00-1.11-1.352H5.106M7.5 14.25L5.106 5.032" />
+    </svg>
+    <% if (cartCount > 0) { %>
+      <span class="absolute right-3 top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-accent-600 px-1 text-[9px] font-bold text-white"><%= cartCount %></span>
+    <% } %>
+    <span class="text-[10px] font-semibold leading-none">Giỏ hàng</span>
   </a>
 </div>
 
