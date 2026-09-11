@@ -319,6 +319,54 @@ sản phẩm rồi đặt 1 lần — không cần bảng mới, tái dùng đú
 
 ---
 
+## 6e. Chạy bằng Docker (máy chủ mới, từ 2026-09)
+
+Từ đợt migrate sang máy chủ `10.1.67.189`, site chạy bằng Docker Compose thay vì cài Node/MySQL
+trực tiếp lên hệ điều hành như máy cũ (`192.168.68.109`, vẫn chạy kiểu cũ cho các app khác — xem
+ghi chú cuối mục này). Layout trên máy chủ:
+
+```
+/opt/bmb-vietnam/app/            # git checkout của repo này, chứa docker-compose.yml
+/opt/bmb-vietnam/app/data/mysql/     # bind mount — data thật của MySQL container
+/opt/bmb-vietnam/app/data/uploads/   # bind mount — ảnh admin upload qua CMS
+```
+
+**`data/` phải nằm trong `app/`** (cùng cấp `docker-compose.yml`, không phải `/opt/bmb-vietnam/data/`)
+vì compose file dùng đường dẫn tương đối `./data/...` — nhầm cấp thư mục này chính là lỗi gặp phải
+lúc migrate ban đầu (uploads mount vào đúng chỗ nhưng rỗng vì rsync nhầm sang thư mục cha).
+
+**2 container**: `db` (MySQL 8, bind mount `./data/mysql`) và `app` (build từ `Dockerfile` — multi-stage:
+stage 1 cài đủ deps + chạy `npm run build:css`, stage 2 chỉ copy code + `npm ci --omit=dev`, không có
+`node_modules` dev hay file `.env` lọt vào image). `app` phụ thuộc `db` qua `depends_on.condition:
+service_healthy`, không khởi động trước khi MySQL sẵn sàng.
+
+**`.env`** không nằm trong repo (đã gitignore), phải tạo tay trên server dựa theo `.env.example` —
+thêm biến `DB_ROOT_PASSWORD` chỉ dùng để bootstrap container MySQL lần đầu (tạo user/database),
+app không đọc biến này. `DB_HOST` phải là `db` (tên service trong `docker-compose.yml`), không phải
+`localhost`, vì `app` gọi sang container khác qua Docker network nội bộ.
+
+**Deploy code mới lên máy Docker này:**
+```bash
+# Trên máy dev: git push origin main như bình thường.
+# Trên server:
+cd /opt/bmb-vietnam/app
+git pull
+docker compose build app
+docker compose up -d app
+```
+Không cần đổi gì ở `db` service trừ khi đổi schema — schema mới tự chạy qua `ensureSchema()` +
+các hàm `backfill*IfMissing()` trong `db/database.js` như trên máy cũ, không cần migration tool riêng.
+
+**Nếu cần khôi phục hoặc backup dữ liệu**: `docker compose exec db mysqldump -uroot -p"$DB_ROOT_PASSWORD"
+bmb_vietnam > backup.sql` (đọc `DB_ROOT_PASSWORD` từ `.env` trước bằng `source .env`). Phục hồi thì
+làm ngược lại với `docker compose exec -T db mysql -uroot -p"$DB_ROOT_PASSWORD" bmb_vietnam < backup.sql`.
+
+**Máy cũ (`192.168.68.109`)**: là máy dùng chung cho nhiều app khác (`netadmin_pro`, `ntr_running`
+cũng chạy MySQL trên đó) — khi tắt service `bmb-vietnam.service` trên máy cũ, **không được tắt cả
+máy hay MySQL instance**, chỉ gỡ riêng service/DB `bmb_vietnam` của site này.
+
+---
+
 ## 7. Quy trình sửa code + build + deploy
 
 **Bắt buộc sau khi sửa `.ejs` hoặc `src/input.css`:**
