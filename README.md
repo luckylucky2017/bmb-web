@@ -358,15 +358,17 @@ các biến cần biết:
 - `DATA_DIR` (tuỳ chọn): đường dẫn host chứa `mysql/` và `uploads/` — để trống thì mặc định
   `/opt/bmb-vietnam/data`, chỉ set khi deploy ở máy có layout thư mục khác.
 
-**Deploy code mới lên máy Docker này:**
+**Deploy code mới lên máy Docker này** — repo `bmb-web` là **public trên GitHub**, nên bước `git
+pull` trên server không cần token/SSH key/đăng nhập gì cả, cứ pull thẳng là được:
 ```bash
 # Trên máy dev: git push origin main như bình thường.
 # Trên server:
-cd /opt/bmb-vietnam/app
-git pull
-docker compose build app
-docker compose up -d app
+cd /opt/bmb-vietnam/app && ./deploy.sh
 ```
+`deploy.sh` (đã có sẵn trong repo) làm đúng 4 việc: `git pull` → build lại image `app` → khởi động
+lại **chỉ container `app`** (không đụng `db`, không mất kết nối/khởi động lại database) → tự curl
+kiểm tra trang chủ, báo lỗi ngay nếu app không lên được thay vì lặng lẽ để bug ra production.
+
 Không cần đổi gì ở `db` service trừ khi đổi schema — schema mới tự chạy qua `ensureSchema()` +
 các hàm `backfill*IfMissing()` trong `db/database.js` như trên máy cũ, không cần migration tool riêng.
 
