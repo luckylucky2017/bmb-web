@@ -11,6 +11,12 @@ RUN npm run build:css
 FROM node:22-alpine AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
+# Alpine ships without tzdata, so without this `new Date()` and every
+# formatDate()/toLocaleDateString() call in the app run in UTC instead of
+# Vietnam time — order timestamps, "created_at" displays, etc. would all be
+# off by 7 hours from what MySQL (also set to this TZ) reports.
+ENV TZ=Asia/Ho_Chi_Minh
+RUN apk add --no-cache tzdata
 COPY package*.json ./
 RUN npm ci --omit=dev
 COPY --from=build /app/server.js ./server.js

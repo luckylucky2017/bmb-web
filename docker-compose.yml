@@ -4,11 +4,23 @@
 # this data; it's just files under /opt you can `ls`, `rsync`, or back up
 # directly. Override DATA_DIR in .env only if this deployment's data must
 # live somewhere other than /opt/bmb-vietnam/data.
+# Both services pinned to Vietnam time (GMT+7) — containers default to UTC
+# regardless of the host's own timezone, which would otherwise put MySQL's
+# NOW()/CURRENT_TIMESTAMP and the app's `new Date()` 7 hours behind actual
+# local time (order timestamps, activity_log, "created_at" displays, etc.).
+x-timezone: &timezone
+  TZ: Asia/Ho_Chi_Minh
+
 services:
   db:
     image: mysql:8.0
     restart: unless-stopped
+    # Belt-and-suspenders alongside TZ below: this sets MySQL's own
+    # time_zone directly, so NOW()/CURRENT_TIMESTAMP are correct even if the
+    # image's entrypoint doesn't fully wire up TZ to the OS's /etc/localtime.
+    command: --default-time-zone=+07:00
     environment:
+      <<: *timezone
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
@@ -29,6 +41,7 @@ services:
         condition: service_healthy
     env_file: .env
     environment:
+      <<: *timezone
       DB_HOST: db
       DB_PORT: "3306"
     ports:
