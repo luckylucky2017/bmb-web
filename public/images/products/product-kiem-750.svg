@@ -1,0 +1,20 @@
+<svg width="300" height="420" viewBox="0 0 300 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bottle" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#0ea5e9" stop-opacity="0.55"/>
+      <stop offset="45%" stop-color="#0ea5e9" stop-opacity="0.92"/>
+      <stop offset="100%" stop-color="#0ea5e9" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef8ff"/>
+      <stop offset="100%" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="420" rx="24" fill="url(#bg)"/>
+  <ellipse cx="150" cy="382" rx="65" ry="13" fill="#0c2947" opacity="0.08"/>
+  <rect x="130" y="50" width="40" height="26" rx="6" fill="#0c2947"/>
+  <path d="M122 76 h56 l9 36 c6 20 7 36 7 56 v140 a13 13 0 0 1 -13 13 h-62 a13 13 0 0 1 -13 -13 v-140 c0 -20 1 -36 7 -56 z" fill="url(#bottle)" stroke="#0ea5e9" stroke-width="2"/>
+  <rect x="110" y="216" width="80" height="66" rx="4" fill="#ffffff" opacity="0.92" stroke="#0ea5e9" stroke-width="1.5"/>
+  <text x="150" y="243" font-family="'Be Vietnam Pro', Arial, sans-serif" font-weight="800" font-size="18" fill="#0ea5e9" text-anchor="middle">Lavie+</text>
+  <text x="150" y="260" font-family="'Be Vietnam Pro', Arial, sans-serif" font-weight="600" font-size="9" letter-spacing="2" fill="#5b7691" text-anchor="middle">KIỀM</text>
+</svg>
