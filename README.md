@@ -390,6 +390,35 @@ máy hay MySQL instance**, chỉ gỡ riêng service/DB `bmb_vietnam` của site
 
 ---
 
+## 6f. Thống kê lượt truy cập & click Gọi/Zalo/Facebook (hiển thị công khai)
+
+Một thanh nhỏ ở cuối footer, hiện trên **mọi trang công khai**, hiển thị 4 số: lượt truy cập, lượt
+gọi điện, lượt nhắn Zalo, lượt bấm Facebook. Đây là bộ đếm tổng đơn giản (không phải "khách truy cập
+duy nhất" — mỗi lần tải trang tính 1 lượt), phù hợp cho một trang nhỏ, không cần độ chính xác kiểu
+Google Analytics.
+
+- **Lưu ở đâu**: bảng `site_stats` (`db/schema.sql`) — 1 dòng mỗi loại số liệu (`visits`,
+  `call_clicks`, `zalo_clicks`, `facebook_clicks`), cộng dồn bằng `INSERT ... ON DUPLICATE KEY UPDATE
+  count = count + 1` (`models/Stats.js`) — không log riêng từng lượt truy cập, không có dữ liệu cá
+  nhân nào được ghi lại.
+- **Đếm lượt truy cập**: tăng tự động ở middleware chung trong `server.js` (chỗ nạp `site`,
+  `menuItems`...) — chạy trên mọi trang công khai render qua layout, không tính các request
+  file tĩnh (ảnh, css, js) vì `express.static` đã xử lý xong trước khi tới middleware này.
+- **Đếm click Gọi/Zalo/Facebook**: `public/js/site.js` gắn `fetch()` không chặn (`keepalive: true`)
+  vào mọi phần tử có `data-track="call"` / `"zalo"` / `"facebook"` khi click, gửi tới
+  `POST /thong-ke/click`. Endpoint này lọc theo whitelist cố định trong `server.js`
+  (`CLICK_METRICS`) — gửi giá trị `type` khác sẽ bị bỏ qua an toàn, không lỗi, không tạo dòng mới.
+  Có rate-limit riêng (60 req/15 phút/IP, tách khỏi `publicFormLimiter` dùng cho form liên hệ/đặt
+  hàng) để 1 người bấm liên tiếp vài nút không bị chặn.
+- **Nếu thêm nút gọi/Zalo/Facebook mới ở đâu đó trên site**: chỉ cần thêm `data-track="call"` (hoặc
+  `"zalo"`/`"facebook"`) vào thẻ `<a>`/`<button>` đó — `site.js` tự động bắt sự kiện qua
+  `document.querySelectorAll("[data-track]")`, không cần sửa gì thêm.
+- **Không có trang reset/xem chi tiết theo ngày** — đây là bộ đếm tổng đơn giản theo đúng yêu cầu ban
+  đầu (hiển thị số trên site), không phải hệ thống phân tích. Nếu sau này cần xem theo ngày/tuần,
+  phải đổi sang lưu row-per-event thay vì bảng counter này.
+
+---
+
 ## 7. Quy trình sửa code + build + deploy
 
 **Bắt buộc sau khi sửa `.ejs` hoặc `src/input.css`:**

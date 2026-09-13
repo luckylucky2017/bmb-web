@@ -168,3 +168,13 @@ CREATE TABLE IF NOT EXISTS activity_log (
   entity_id INT,
   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Simple public-facing counters (site visits, Call/Zalo/Facebook button
+-- clicks) shown live in the footer — one row per metric, incremented
+-- atomically, not a row-per-event log (this site has no need to report on
+-- individual events, just running totals).
+CREATE TABLE IF NOT EXISTS site_stats (
+  metric VARCHAR(32) PRIMARY KEY,
+  count INT NOT NULL DEFAULT 0,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

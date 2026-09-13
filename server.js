@@ -25,6 +25,7 @@ const ContactMessage = require("./models/ContactMessage");
 const Setting = require("./models/Setting");
 const MenuItem = require("./models/MenuItem");
 const AdBanner = require("./models/AdBanner");
+const Stats = require("./models/Stats");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -112,6 +113,7 @@ app.use((req, res, next) => {
   res.locals.flashSuccess = req.flash("success");
   res.locals.flashError = req.flash("error");
   res.locals.formatVND = (n) => `${Number(n || 0).toLocaleString("vi-VN")}₫`;
+  res.locals.formatNumber = (n) => Number(n || 0).toLocaleString("vi-VN");
   res.locals.formatDate = (d) => (d ? new Date(d).toLocaleDateString("vi-VN") : "");
   next();
 });
@@ -146,6 +148,23 @@ const publicFormLimiter = rateLimit({
   message: "Bạn gửi quá nhiều yêu cầu. Vui lòng thử lại sau ít phút."
 });
 
+// Separate, more generous limiter than publicFormLimiter — a single visitor
+// legitimately clicking Call then Zalo then Facebook shouldn't eat into the
+// budget shared with the contact/order forms.
+const clickStatsLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 60,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Quá nhiều yêu cầu."
+});
+const CLICK_METRICS = { call: "call_clicks", zalo: "zalo_clicks", facebook: "facebook_clicks" };
+app.post("/thong-ke/click", clickStatsLimiter, asyncHandler(async (req, res) => {
+  const metric = CLICK_METRICS[req.body.type];
+  if (metric) await Stats.increment(metric);
+  res.status(204).end();
+}));
+
 // ---- Admin CMS ----
 app.use("/admin", require("./routes/admin/index"));
 
@@ -161,6 +180,8 @@ app.use(
     res.locals.adBannersLeft = await AdBanner.all({ position: "left", status: "active" });
     res.locals.adBannersRight = await AdBanner.all({ position: "right", status: "active" });
     res.locals.cartCount = Cart.count(req);
+    await Stats.increment("visits");
+    res.locals.siteStats = await Stats.getAll();
     next();
   })
 );

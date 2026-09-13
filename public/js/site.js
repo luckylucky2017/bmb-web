@@ -9,6 +9,24 @@ document.addEventListener("DOMContentLoaded", () => {
     iconClose.classList.toggle("hidden");
   });
 
+  // Fire-and-forget hit counter for the public stats bar in the footer —
+  // never blocks the tel:/external navigation the button already does.
+  function trackClick(type) {
+    try {
+      fetch("/thong-ke/click", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: `type=${encodeURIComponent(type)}`,
+        keepalive: true
+      });
+    } catch {
+      // Analytics failing silently should never break the button itself.
+    }
+  }
+  document.querySelectorAll("[data-track]").forEach((el) => {
+    el.addEventListener("click", () => trackClick(el.dataset.track));
+  });
+
   // Call picker: when a trigger has two hotline numbers, ask which one to
   // dial instead of silently calling only the primary number.
   const picker = document.getElementById("call-picker");
@@ -57,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.querySelectorAll(".js-call-trigger").forEach((el) => {
     el.addEventListener("click", () => {
+      trackClick("call");
       const tel = el.getAttribute("data-tel") || "";
       const tel2 = el.getAttribute("data-tel2") || "";
       if (tel2) {
