@@ -272,11 +272,11 @@ app.get(
       Post.all({ status: "published", limit: 3 })
     ]);
     res.render("pages/home", {
-      title: "Đại Lý Nước Khoáng Lavie Hà Nội - Phân Phối Nước Sạch, Giao Tận Nhà | BMB Việt Nam",
+      title: "Nước Khoáng Lavie Thiên Nhiên Hà Nội - Phân Phối & Bán Lẻ Nước | BMB Việt Nam",
       description:
-        "BMB Việt Nam - đại lý nước Lavie chính hãng tại Hà Nội. Chuyên phân phối nước khoáng, nước tinh khiết, nước sạch đóng bình 19L, giao nước tận nhà trong ngày.",
+        "BMB Việt Nam - đại lý phân phối và bán lẻ nước khoáng thiên nhiên Lavie chính hãng tại Hà Nội. Chuyên phân phối nước, nước khoáng, nước tinh khiết, nước đóng bình 19L, giao nước tận nhà trong ngày.",
       keywords:
-        "nước khoáng, nước lavie, nước sạch, phân phối nước, đại lý nước, đại lý nước lavie hà nội, nước khoáng lavie, giao nước tận nhà hà nội, nước đóng bình 19l, nước tinh khiết hà nội, đặt nước lavie, mua nước lavie giá rẻ",
+        "nước, nước khoáng, nước khoáng thiên nhiên, nước lavie, lavie hà nội, thiên nhiên, phân phối nước, bán lẻ nước, đại lý nước, đại lý nước lavie hà nội, nước sạch, giao nước tận nhà hà nội, nước đóng bình 19l, nước tinh khiết hà nội, đặt nước lavie, mua nước lavie giá rẻ",
       products: products.slice(0, 4),
       news
     });
@@ -285,10 +285,10 @@ app.get(
 
 app.get("/gioi-thieu", (req, res) => {
   res.render("pages/about", {
-    title: "Giới Thiệu Đại Lý Nước Lavie Hà Nội | BMB Việt Nam",
+    title: "Giới Thiệu Nhà Phân Phối Nước Lavie Hà Nội | BMB Việt Nam",
     description:
-      "BMB Việt Nam là đại lý phân phối nước khoáng Lavie chính thức tại Hà Nội, chuyên cung cấp nước sạch, nước tinh khiết cho hộ gia đình và văn phòng.",
-    keywords: "đại lý nước lavie hà nội, phân phối nước lavie, giới thiệu đại lý nước, nước sạch hà nội, đại lý nước khoáng"
+      "BMB Việt Nam là nhà phân phối và bán lẻ nước khoáng thiên nhiên Lavie chính thức tại Hà Nội, chuyên cung cấp nước sạch, nước tinh khiết cho hộ gia đình và văn phòng.",
+    keywords: "nước lavie, lavie hà nội, nước khoáng thiên nhiên, thiên nhiên, phân phối nước, bán lẻ nước, đại lý nước lavie hà nội, giới thiệu đại lý nước, nước sạch hà nội, đại lý nước khoáng"
   });
 });
 
@@ -297,11 +297,11 @@ app.get(
   asyncHandler(async (req, res) => {
     const products = await Product.all({ status: "published" });
     res.render("pages/products", {
-      title: "Bảng Giá Nước Khoáng Lavie - Đầy Đủ Các Loại | BMB Việt Nam",
+      title: "Bảng Giá Nước Khoáng Lavie Thiên Nhiên - Bán Lẻ & Sỉ | BMB Việt Nam",
       description:
-        "Bảng giá đầy đủ nước khoáng Lavie, nước tinh khiết, nước đóng bình 19L chính hãng. Đại lý nước Lavie Hà Nội, giao hàng tận nơi, giá tốt nhất thị trường.",
+        "Bảng giá đầy đủ nước khoáng thiên nhiên Lavie, nước tinh khiết, nước đóng bình 19L chính hãng. Phân phối và bán lẻ nước Lavie Hà Nội, giao hàng tận nơi, giá tốt nhất thị trường.",
       keywords:
-        "giá nước lavie, bảng giá nước khoáng lavie, nước lavie 500ml, nước lavie 19l, mua nước khoáng, đại lý nước khoáng hà nội, nước tinh khiết",
+        "nước, nước khoáng, nước khoáng thiên nhiên, nước lavie, lavie hà nội, bán lẻ nước, phân phối nước, giá nước lavie, bảng giá nước khoáng lavie, nước lavie 500ml, nước lavie 19l, mua nước khoáng, đại lý nước khoáng hà nội, nước tinh khiết",
       products
     });
   })
@@ -490,7 +490,7 @@ app.get(
       description:
         "BMB Việt Nam giao nước Lavie, nước sạch tận nhà tại tất cả các quận huyện Hà Nội: Cầu Giấy, Đống Đa, Hà Đông, Thanh Xuân... Giao nhanh 2-4 giờ.",
       keywords:
-        "giao nước tận nhà hà nội, phân phối nước hà nội, đại lý nước theo quận, giao nước cầu giấy, giao nước đống đa, giao nước hà đông, giao nước thanh xuân",
+        "phân phối nước, bán lẻ nước, giao nước tận nhà hà nội, phân phối nước hà nội, đại lý nước theo quận, giao nước cầu giấy, giao nước đống đa, giao nước hà đông, giao nước thanh xuân",
       distributors
     });
   })
