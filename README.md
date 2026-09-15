@@ -189,15 +189,27 @@ này thì video sẽ bị chặn câm, không báo lỗi rõ ràng).
 ## 5. SEO đã triển khai
 
 - Mỗi route trong `server.js` truyền `title`, `description`, `keywords` riêng — xem cách đặt trong
-  từng `res.render(...)`. Từ khoá chính đang nhắm: *nước khoáng, nước lavie, nước sạch, phân phối
-  nước, đại lý nước* + các biến thể theo địa bàn Hà Nội.
+  từng `res.render(...)`. Bộ từ khoá đang nhắm (từ 2026-09): *nước, nước khoáng, nước khoáng thiên
+  nhiên, nước lavie, lavie hà nội, thiên nhiên, phân phối nước, bán lẻ nước, đại lý nước* + các biến
+  thể theo địa bàn Hà Nội. Trang nào thêm sản phẩm/nội dung mới thì nhớ giữ đúng bộ từ khoá này khi
+  viết `title`/`description`/`keywords`, đừng nhét từ khoá không liên quan (Google phạt nhồi nhét).
 - `views/layout.ejs`: canonical URL, Open Graph, Twitter Card, và **JSON-LD structured data**
-  (`@type: Store`) lấy dữ liệu trực tiếp từ Cài đặt (`site.address`, `site.hotline`...).
+  (`@type: Store`) lấy dữ liệu trực tiếp từ Cài đặt (`site.address`, `site.hotline`...) — mô tả
+  trong schema này phải khớp nội dung với thẻ `<meta name="description">` của trang chủ, tránh
+  Google thấy 2 mô tả khác nhau cho cùng 1 thực thể.
 - `/robots.txt` và `/sitemap.xml` là route động trong `server.js` (không phải file tĩnh) — sitemap
-  tự liệt kê toàn bộ sản phẩm/bài viết đang published, không cần cập nhật tay.
-- **Việc còn thiếu:** ảnh thật (hiện toàn bộ minh hoạ sản phẩm là SVG tự vẽ, không phải ảnh chụp
-  thật — nên thay bằng ảnh thật để tốt cho SEO hình ảnh + tỷ lệ chuyển đổi), Google Search Console
-  chưa được submit sitemap, chưa có Google Business Profile liên kết.
+  tự liệt kê toàn bộ sản phẩm/bài viết đang published, không cần cập nhật tay (hiện có 26 URL: 8
+  trang tĩnh + 14 sản phẩm + bài viết + trang tuỳ chỉnh).
+- **Việc còn thiếu (cần làm ở phía chủ site, không làm được qua code):**
+  - **Google Search Console**: chưa verify quyền sở hữu domain + chưa submit sitemap. Vào
+    [search.google.com/search-console](https://search.google.com/search-console), thêm property
+    `laviewaterhanoi.vn`, verify bằng 1 trong các cách (thêm bản ghi DNS TXT, hoặc dán 1 thẻ
+    `<meta name="google-site-verification">` — báo lại mã đó thì thêm được ngay vào `layout.ejs`),
+    sau đó nộp URL `https://laviewaterhanoi.vn/sitemap.xml` ở mục Sitemaps.
+  - **Google Business Profile**: chưa tạo/liên kết hồ sơ doanh nghiệp trên Google Maps — quan trọng
+    cho tìm kiếm "phân phối nước hà nội gần đây" dạng local pack, code không tự làm được việc này.
+  - Ảnh sản phẩm thật: 8/14 sản phẩm đã dùng ảnh chụp thật, 6 sản phẩm mới vẫn là SVG minh hoạ tự vẽ
+    — nên thay bằng ảnh chụp thật khi có, tốt hơn cho SEO hình ảnh + tỷ lệ chuyển đổi.
 
 ---
 
